@@ -82,8 +82,8 @@ let matches = [{
     fn: multiMatch([0, 0, 0, 0], sumScore())
   },
   {
-    label: "Full House TODO",
-    fn: multiMatch([0], () => 25) // TODO TODO TODO
+    label: "Full House",
+    fn: fullHouseMatch(() => 25)
   },
   {
     label: "Kleine Straße",
@@ -99,7 +99,7 @@ let matches = [{
   },
   {
     label: "Chance",
-    fn: multiMatch([0], sumScore())
+    fn: anyMatch(sumScore())
   },
 ]
 
@@ -111,14 +111,34 @@ function filterScore_(eq) {
   return actual => actual.filter(n => n == eq).reduce((a, b) => a + b, 0)
 }
 
-function sumScore(){
+function sumScore() {
   return actual => actual.reduce((a, b) => a + b, 0)
 }
 
+function fullHouseMatch(score) {
+  let matches = []
+  for (var i = 1; i < 7; i++) {
+    for (var j = i + 1; j < 7; j++) {
+      matches.push([i, i, j, j, j], [i, i, i, j, j])
+    }
+  }
+  return actual => {
+    let matching = matches
+      .map(ms => exactMatch(ms, actual))
+      .filter(x => x)
+      .length > 0
+    if (matching) return score(actual)
+    else return 0
+  }
+}
+
+function anyMatch(score) {
+  return actual => {
+    return score(actual)
+  }
+}
+
 function multiMatch(relativeMatches, score) {
-  // instantiate matches for every possible value
-  // test all matches against actual
-  // return score
   let specificMatches = []
   for (var i = 1; i < 7; i++) {
     specificMatches.push(specifyRelativeMatch(relativeMatches, i))

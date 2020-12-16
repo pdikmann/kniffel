@@ -13,7 +13,11 @@ window.onload = () => {
   render(state)
 }
 
-// ================================================================== State
+//  ███████ ████████  █████  ████████ ███████ 
+//  ██         ██    ██   ██    ██    ██      
+//  ███████    ██    ███████    ██    █████ 
+//       ██    ██    ██   ██    ██    ██    
+//  ███████    ██    ██   ██    ██    ███████ 
 
 let state = {
   currentPlayer: 0,
@@ -37,6 +41,14 @@ function rollAll(state) {
   return state
 }
 
+function diceValues(state) {
+  let values = []
+  for (var d = 0; d < state.dice.length; d++) {
+    values.push(state.dice[d].value)
+  }
+  return values
+}
+
 let matches = [{
     label: "einser",
     fn: simpleMatch(1)
@@ -56,12 +68,6 @@ function filterScore_(eq) {
 }
 
 function match_(matches, score) {
-  // array of matching numbers
-  // array of actual dice values
-  // match first and first
-  // if match: pop both
-  // if no match: pop actual dice
-  // until matching empty (match) or actual empty (no match)
   return actual => {
     let ms = [...matches]
     let as = [...actual]
@@ -78,8 +84,12 @@ function match_(matches, score) {
   }
 }
 
+//  ██    ██ ██ 
+//  ██    ██ ██ 
+//  ██    ██ ██ 
+//  ██    ██ ██ 
+//   ██████  ██ 
 
-// ================================================================== UI
 
 let ui = {}
 
@@ -93,7 +103,18 @@ ui.keep = (n) => {
   render(state)
 }
 
-// ================================================================== DOM
+ui.selectMatch = (n) => {
+  let match = dom.matches[n]
+  if (match.done) return
+  match.done = true
+  match.element.className = "done"
+}
+
+//  ██████   ██████  ███    ███ 
+//  ██   ██ ██    ██ ████  ████ 
+//  ██   ██ ██    ██ ██ ████ ██ 
+//  ██   ██ ██    ██ ██  ██  ██ 
+//  ██████   ██████  ██      ██ 
 
 let dom = {
   dices: [],
@@ -114,7 +135,38 @@ function render(state) {
     dices[d].textContent = state.dice[d].value
     dices[d].className = "dice" + (state.dice[d].keep ? " keep" : "")
   }
+  for (var m = 0; m < dom.matches.length; m++) {
+    let match = dom.matches[m].element,
+      score = matches[m].fn(diceValues(state))
+    if (dom.matches[m].done) continue
+    if (score == 0) {
+      match.className = "zero"
+    } else {
+      match.className = "ok"
+    }
+    match.textContent = score
+  }
   dom.rollButton.textContent = state.msg
+}
+
+
+function makeTable(parent) {
+  let table = mk.table()
+  let tr = mk.tr(table)
+  mk.td(tr, "Spiel")
+  mk.td(tr, "Spieler 1")
+  for (var i = 0; i < matches.length; i++) {
+    tr = mk.tr(table)
+    mk.td(tr, matches[i].label)
+    let match = mk.td(tr, "-_-"),
+      n = i
+    match.addEventListener("click", () => ui.selectMatch(n))
+    dom.matches.push({
+      element: match,
+      done: false
+    })
+  }
+  parent.appendChild(table)
 }
 
 function addClass(dom, className) {
@@ -127,21 +179,13 @@ function removeClass(dom, className) {
   return dom
 }
 
-function makeTable(dom) {
-  let table = mk.table()
-  let tr = mk.tr(table)
-  mk.td(tr, "Spiel")
-  mk.td(tr, "Spieler 1")
-  for (var i = 0; i < matches.length; i++) {
-    tr = mk.tr(table)
-    mk.td(tr, matches[i].label)
-    mk.td(tr, "-_-")
-  }
-  dom.appendChild(table)
-}
+//  ███    ███  █████  ██   ██ ███████ 
+//  ████  ████ ██   ██ ██  ██  ██      
+//  ██ ████ ██ ███████ █████   █████ 
+//  ██  ██  ██ ██   ██ ██  ██  ██    
+//  ██      ██ ██   ██ ██   ██ ███████ 
 
 let mk = {}
-
 mk.create = (elm) => document.createElement(elm)
 mk.table = () => mk.create("table")
 mk.createIn = (target, elm, txt) => {
@@ -154,7 +198,11 @@ mk.tr = (target) => mk.createIn(target, "tr")
 mk.td = (target, txt) => mk.createIn(target, "td", txt)
 
 
-// ================================================================== Misc
+//  ██    ██ ████████ ██ ██      ███████ 
+//  ██    ██    ██    ██ ██      ██      
+//  ██    ██    ██    ██ ██      ███████ 
+//  ██    ██    ██    ██ ██           ██ 
+//   ██████     ██    ██ ███████ ███████ 
 
 function stringAdd(original, additional) {
   let s = original.split(" ")
@@ -166,6 +214,12 @@ function stringRemove(original, removal) {
   let s = original.split(" ")
   return s.filter(x => x != removal).join(" ")
 }
+
+//  ████████ ███████ ███████ ████████ 
+//     ██    ██      ██         ██    
+//     ██    █████   ███████    ██ 
+//     ██    ██           ██    ██ 
+//     ██    ███████ ███████    ██ 
 
 function runAllTests() {
   let sa = stringAdd("foo bar", "baz")

@@ -23,3 +23,12 @@
 #scoreboard td, #scoreboard th {
   border: 1px solid black;
 }
+#scoreboard td.zero {
+  background-color: red;
+}
+#scoreboard td.ok {
+  background-color: green;
+}
+#scoreboard td.done {
+  background-color: gray;
+}

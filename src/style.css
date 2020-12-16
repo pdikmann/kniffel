@@ -1,0 +1,25 @@
+.buttons div {
+  border: 1px solid black;
+}
+#dices {
+  display: flex;
+  align-content: space-between;
+}
+.dice {
+  display: inline-block;
+  border: 1px solid black;
+  width: 30px;
+  height: 30px;
+}
+
+.dice.keep {
+  background-color: blue;
+}
+
+#scoreboard table {
+  /* border: 1px solid black; */
+  border-collapse: collapse;
+}
+#scoreboard td, #scoreboard th {
+  border: 1px solid black;
+}

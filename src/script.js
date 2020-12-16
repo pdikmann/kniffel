@@ -23,7 +23,7 @@ let state = {
   currentPlayer: 0,
   playerCount: 1,
   dice: [],
-  matches: [{}], // per player
+  score: [], // per player
   msg: "reroll"
 }
 
@@ -50,38 +50,126 @@ function diceValues(state) {
 }
 
 let matches = [{
-    label: "einser",
-    fn: simpleMatch(1)
+    label: "Einser",
+    fn: oneOrMoreOf(1)
   },
   {
-    label: "zweier",
-    fn: simpleMatch(2)
-  }
+    label: "Zweier",
+    fn: oneOrMoreOf(2)
+  },
+  {
+    label: "Dreier",
+    fn: oneOrMoreOf(3)
+  },
+  {
+    label: "Vierer",
+    fn: oneOrMoreOf(4)
+  },
+  {
+    label: "Fünfer",
+    fn: oneOrMoreOf(5)
+  },
+  {
+    label: "Sechser",
+    fn: oneOrMoreOf(6)
+  },
+  {
+    label: "Dreierpasch",
+    fn: multiMatch([0, 0, 0], sumScore())
+  },
+  {
+    label: "Viererpasch",
+    fn: multiMatch([0, 0, 0, 0], sumScore())
+  },
+  {
+    label: "Full House TODO",
+    fn: multiMatch([0], () => 25) // TODO TODO TODO
+  },
+  {
+    label: "Kleine Straße",
+    fn: multiMatch([0, 1, 2, 3], () => 30)
+  },
+  {
+    label: "Große Straße",
+    fn: multiMatch([0, 1, 2, 3, 4], () => 40)
+  },
+  {
+    label: "Kniffel",
+    fn: multiMatch([0, 0, 0, 0, 0], () => 50)
+  },
+  {
+    label: "Chance",
+    fn: multiMatch([0], sumScore())
+  },
 ]
 
-function simpleMatch(n) {
-  return match_([n], filterScore_(n))
+function oneOrMoreOf(n) {
+  return singleMatch([n], filterScore_(n))
 }
 
 function filterScore_(eq) {
   return actual => actual.filter(n => n == eq).reduce((a, b) => a + b, 0)
 }
 
-function match_(matches, score) {
-  return actual => {
-    let ms = [...matches]
-    let as = [...actual]
-    while (ms.length > 0 && as.length > 0) {
-      if (ms[0] == as[0]) {
-        ms.shift()
-        as.shift()
-      } else {
-        as.shift()
-      }
-    }
-    if (ms.length == 0) return score(actual)
-    if (as.length == 0) return 0
+function sumScore(){
+  return actual => actual.reduce((a, b) => a + b, 0)
+}
+
+function multiMatch(relativeMatches, score) {
+  // instantiate matches for every possible value
+  // test all matches against actual
+  // return score
+  let specificMatches = []
+  for (var i = 1; i < 7; i++) {
+    specificMatches.push(specifyRelativeMatch(relativeMatches, i))
   }
+  specificMatches = specificMatches.filter(inRange)
+  return actual => {
+    let matching = specificMatches
+      .map(ms => exactMatch(ms, actual))
+      .filter(x => x)
+      .length > 0
+    if (matching) return score(actual)
+    else return 0
+  }
+}
+
+function inRange(matches) {
+  matches.sort()
+  if (matches[0] >= 1 &&
+    matches.slice(-1) <= 6) return true
+  return false
+}
+
+function specifyRelativeMatch(relativeMatches, n) {
+  let specificMatch = []
+  for (var i = 0; i < relativeMatches.length; i++) {
+    specificMatch.push(relativeMatches[i] + n)
+  }
+  return specificMatch
+}
+
+function singleMatch(matches, score) {
+  return actual => {
+    let matching = exactMatch(matches, actual)
+    if (matching) return score(actual)
+    else return 0
+  }
+}
+
+function exactMatch(matches, actual) {
+  let ms = [...matches]
+  let as = [...actual]
+  while (ms.length > 0 && as.length > 0) {
+    if (ms[0] == as[0]) {
+      ms.shift()
+      as.shift()
+    } else {
+      as.shift()
+    }
+  }
+  if (ms.length == 0) return true
+  if (as.length == 0) return false
 }
 
 //  ██    ██ ██ 
@@ -107,7 +195,8 @@ ui.selectMatch = (n) => {
   let match = dom.matches[n]
   if (match.done) return
   match.done = true
-  match.element.className = "done"
+  state.score[n] = matches[n].fn(diceValues(state))
+  render(state)
 }
 
 //  ██████   ██████  ███    ███ 
@@ -120,7 +209,8 @@ let dom = {
   dices: [],
   rollButton: {},
   scoreboard: {},
-  matches: []
+  matches: [],
+  bonus: {},
 }
 
 function getDOM(dom) {
@@ -137,15 +227,43 @@ function render(state) {
   }
   for (var m = 0; m < dom.matches.length; m++) {
     let match = dom.matches[m].element,
-      score = matches[m].fn(diceValues(state))
-    if (dom.matches[m].done) continue
+      oldScore = state.score[m],
+      score = (oldScore == undefined) ? matches[m].fn(diceValues(state)) : oldScore
     if (score == 0) {
       match.className = "zero"
     } else {
       match.className = "ok"
     }
+    if (dom.matches[m].done) {
+      addClass(match, "done")
+      continue
+    }
     match.textContent = score
   }
+  if (state.score.slice(0, 6).filter(x => x > 0).length == 6) {
+    dom.bonus.textContent = "35"
+    dom.bonus.className = "ok done"
+  }
+  if (state.score.slice(0, 6).filter(x => x == 0).length > 0) {
+    dom.bonus.textContent = "0"
+    dom.bonus.className = "zero done"
+  }
+  // let bonus = 0,
+  //   getBonus = true,
+  //   failBonus = false
+  // for (var i = 0; i < 6; i++) {
+  //   if (!dom.matches[i].done) {
+  //     getBonus = false
+  //     break
+  //   }
+  //   if (state.score[i] == 0) {
+  //     failBonus = true
+  //     break
+  //   }
+  // }
+  // if (failBonus) dom.bonus.textContent = "failed"
+  // if (!getBonus) dom.bonus.textContent = "..."
+  // if (getBonus) dom.bonus.textContent = "35"
   dom.rollButton.textContent = state.msg
 }
 
@@ -155,18 +273,27 @@ function makeTable(parent) {
   let tr = mk.tr(table)
   mk.td(tr, "Spiel")
   mk.td(tr, "Spieler 1")
-  for (var i = 0; i < matches.length; i++) {
-    tr = mk.tr(table)
-    mk.td(tr, matches[i].label)
-    let match = mk.td(tr, "-_-"),
-      n = i
-    match.addEventListener("click", () => ui.selectMatch(n))
-    dom.matches.push({
-      element: match,
-      done: false
-    })
+  for (var i = 0; i < 6; i++) { // first 6 matches (top)
+    makeMatch(table, matches[i], i)
+  }
+  tr = mk.tr(table)
+  mk.td(tr, "Bonus")
+  dom.bonus = mk.td(tr, 0)
+  for (var i = 6; i < matches.length; i++) { // rest of matches (bottom)
+    makeMatch(table, matches[i], i)
   }
   parent.appendChild(table)
+}
+
+function makeMatch(parent, match, n) {
+  tr = mk.tr(parent)
+  mk.td(tr, match.label)
+  let m = mk.td(tr, "-_-")
+  m.addEventListener("click", () => ui.selectMatch(n))
+  dom.matches.push({
+    element: m,
+    done: false,
+  })
 }
 
 function addClass(dom, className) {
@@ -232,12 +359,12 @@ function runAllTests() {
     console.error("stringRemove fails")
     return
   }
-  let m = match_([1, 2, 3], _ => 1)
+  let m = singleMatch([1, 2, 3], _ => 1)
   if (m([1, 2, 3]) != 1 ||
     m([0, 1, 2, 3, 4]) != 1 ||
     m([2, 3]) != 0 ||
     m([1, 2]) != 0) {
-    console.error("match_ fails")
+    console.error("singleMatch fails")
     return
   }
   let f = filterScore_(1)
@@ -247,11 +374,11 @@ function runAllTests() {
     console.error("filterScore_ fails")
     return
   }
-  let sm = simpleMatch(1)
+  let sm = oneOrMoreOf(1)
   if (sm([1, 2, 3]) != 1 ||
     sm([1, 1, 1]) != 3 ||
     sm([2, 3, 4]) != 0) {
-    console.error("simpleMatch fails")
+    console.error("oneOrMoreOf fails")
     return
   }
   console.log("all tests passed")

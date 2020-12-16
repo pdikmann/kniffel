@@ -29,6 +29,9 @@
 #scoreboard td.ok {
   background-color: green;
 }
-#scoreboard td.done {
-  background-color: gray;
+#scoreboard td.ok.done {
+  background-color: lightgreen;
+}
+#scoreboard td.zero.done {
+  background-color: pink;
 }

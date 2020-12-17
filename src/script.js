@@ -19,12 +19,36 @@ window.onload = () => {
 //       ██    ██    ██   ██    ██    ██    
 //  ███████    ██    ██   ██    ██    ███████ 
 
+let TurnState = {
+  FirstRoll: 0,
+  SecondRoll: 1,
+  ThirdRoll: 2,
+  MatchSelect: 3,
+  MAX: 3
+}
+
 let state = {
   currentPlayer: 0,
   playerCount: 1,
   dice: [],
   score: [], // per player
+  turnState: TurnState.FirstRoll,
   msg: "reroll"
+}
+
+function advanceTurn(state) {
+  state.turnState += 1
+  if (state.turnState > TurnState.MAX) nextTurn()
+}
+
+function nextTurn(state) {
+  state.turnState = TurnState.FirstRoll
+}
+
+function unkeep(state) {
+  state.dice.forEach((item, i) => {
+    item.keep = false
+  })
 }
 
 function rollAll(state) {
@@ -49,148 +73,6 @@ function diceValues(state) {
   return values
 }
 
-let matches = [{
-    label: "Einser",
-    fn: oneOrMoreOf(1)
-  },
-  {
-    label: "Zweier",
-    fn: oneOrMoreOf(2)
-  },
-  {
-    label: "Dreier",
-    fn: oneOrMoreOf(3)
-  },
-  {
-    label: "Vierer",
-    fn: oneOrMoreOf(4)
-  },
-  {
-    label: "Fünfer",
-    fn: oneOrMoreOf(5)
-  },
-  {
-    label: "Sechser",
-    fn: oneOrMoreOf(6)
-  },
-  {
-    label: "Dreierpasch",
-    fn: multiMatch([0, 0, 0], sumScore())
-  },
-  {
-    label: "Viererpasch",
-    fn: multiMatch([0, 0, 0, 0], sumScore())
-  },
-  {
-    label: "Full House",
-    fn: fullHouseMatch(() => 25)
-  },
-  {
-    label: "Kleine Straße",
-    fn: multiMatch([0, 1, 2, 3], () => 30)
-  },
-  {
-    label: "Große Straße",
-    fn: multiMatch([0, 1, 2, 3, 4], () => 40)
-  },
-  {
-    label: "Kniffel",
-    fn: multiMatch([0, 0, 0, 0, 0], () => 50)
-  },
-  {
-    label: "Chance",
-    fn: anyMatch(sumScore())
-  },
-]
-
-function oneOrMoreOf(n) {
-  return singleMatch([n], filterScore_(n))
-}
-
-function filterScore_(eq) {
-  return actual => actual.filter(n => n == eq).reduce((a, b) => a + b, 0)
-}
-
-function sumScore() {
-  return actual => actual.reduce((a, b) => a + b, 0)
-}
-
-function fullHouseMatch(score) {
-  let matches = []
-  for (var i = 1; i < 7; i++) {
-    for (var j = i + 1; j < 7; j++) {
-      matches.push([i, i, j, j, j], [i, i, i, j, j])
-    }
-  }
-  return actual => {
-    let matching = matches
-      .map(ms => exactMatch(ms, actual))
-      .filter(x => x)
-      .length > 0
-    if (matching) return score(actual)
-    else return 0
-  }
-}
-
-function anyMatch(score) {
-  return actual => {
-    return score(actual)
-  }
-}
-
-function multiMatch(relativeMatches, score) {
-  let specificMatches = []
-  for (var i = 1; i < 7; i++) {
-    specificMatches.push(specifyRelativeMatch(relativeMatches, i))
-  }
-  specificMatches = specificMatches.filter(inRange)
-  return actual => {
-    let matching = specificMatches
-      .map(ms => exactMatch(ms, actual))
-      .filter(x => x)
-      .length > 0
-    if (matching) return score(actual)
-    else return 0
-  }
-}
-
-function inRange(matches) {
-  matches.sort()
-  if (matches[0] >= 1 &&
-    matches.slice(-1) <= 6) return true
-  return false
-}
-
-function specifyRelativeMatch(relativeMatches, n) {
-  let specificMatch = []
-  for (var i = 0; i < relativeMatches.length; i++) {
-    specificMatch.push(relativeMatches[i] + n)
-  }
-  return specificMatch
-}
-
-function singleMatch(matches, score) {
-  return actual => {
-    let matching = exactMatch(matches, actual)
-    if (matching) return score(actual)
-    else return 0
-  }
-}
-
-function exactMatch(matches, actual) {
-  let ms = [...matches]
-  let as = [...actual]
-  while (ms.length > 0 && as.length > 0) {
-    if (ms[0] == as[0]) {
-      ms.shift()
-      as.shift()
-    } else {
-      as.shift()
-    }
-  }
-  if (ms.length == 0) return true
-  if (as.length == 0) return false
-}
 
 //  ██    ██ ██ 
 //  ██    ██ ██ 
@@ -202,6 +84,8 @@ function exactMatch(matches, actual) {
 let ui = {}
 
 ui.reroll = () => {
+  if (state.turnState == TurnState.MatchSelect) return
+  advanceTurn(state)
   rollAll(state)
   render(state)
 }
@@ -216,6 +100,8 @@ ui.selectMatch = (n) => {
   if (match.done) return
   match.done = true
   state.score[n] = matches[n].fn(diceValues(state))
+  unkeep(state)
+  nextTurn(state)
   render(state)
 }
 
@@ -231,6 +117,9 @@ let dom = {
   scoreboard: {},
   matches: [],
   bonus: {},
+  sumTop: {},
+  sumBottom: {},
+  sum: {}
 }
 
 function getDOM(dom) {
@@ -249,6 +138,7 @@ function render(state) {
     let match = dom.matches[m].element,
       oldScore = state.score[m],
       score = (oldScore == undefined) ? matches[m].fn(diceValues(state)) : oldScore
+
     if (score == 0) {
       match.className = "zero"
     } else {
@@ -256,9 +146,13 @@ function render(state) {
     }
     if (dom.matches[m].done) {
       addClass(match, "done")
-      continue
+      // continue
     }
     match.textContent = score
+    if (state.turnState == TurnState.FirstRoll && !dom.matches[m].done) {
+      match.textContent = ""
+      match.className = ""
+    }
   }
   if (state.score.slice(0, 6).filter(x => x > 0).length == 6) {
     dom.bonus.textContent = "35"
@@ -268,25 +162,8 @@ function render(state) {
     dom.bonus.textContent = "0"
     dom.bonus.className = "zero done"
   }
-  // let bonus = 0,
-  //   getBonus = true,
-  //   failBonus = false
-  // for (var i = 0; i < 6; i++) {
-  //   if (!dom.matches[i].done) {
-  //     getBonus = false
-  //     break
-  //   }
-  //   if (state.score[i] == 0) {
-  //     failBonus = true
-  //     break
-  //   }
-  // }
-  // if (failBonus) dom.bonus.textContent = "failed"
-  // if (!getBonus) dom.bonus.textContent = "..."
-  // if (getBonus) dom.bonus.textContent = "35"
   dom.rollButton.textContent = state.msg
 }
-
 
 function makeTable(parent) {
   let table = mk.table()
@@ -299,9 +176,18 @@ function makeTable(parent) {
   tr = mk.tr(table)
   mk.td(tr, "Bonus")
   dom.bonus = mk.td(tr, 0)
+  tr = mk.tr(table)
+  mk.td(tr, "Summe Oben")
+  dom.sumTop = mk.td(tr, 0)
   for (var i = 6; i < matches.length; i++) { // rest of matches (bottom)
     makeMatch(table, matches[i], i)
   }
+  tr = mk.tr(table)
+  mk.td(tr, "Summe Unten")
+  dom.sumBottom = mk.td(tr, 0)
+  tr = mk.tr(table)
+  mk.td(tr, "Summe")
+  dom.sum = mk.td(tr, 0)
   parent.appendChild(table)
 }
 
@@ -387,11 +273,11 @@ function runAllTests() {
     console.error("singleMatch fails")
     return
   }
-  let f = filterScore_(1)
+  let f = filterScore(1)
   if (f([1, 2, 3]) != 1 ||
     f([1, 1, 1]) != 3 ||
     f([0, 2, 3]) != 0) {
-    console.error("filterScore_ fails")
+    console.error("filterScore fails")
     return
   }
   let sm = oneOrMoreOf(1)

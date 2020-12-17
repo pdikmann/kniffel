@@ -39,8 +39,10 @@ function render(state) {
   }
   let dices = dom.dices;
   for (var d = 0; d < dices.length; ++d) {
-    dices[d].textContent = state.dice[d].value
-    dices[d].className = "dice" + (state.dice[d].keep ? " keep" : "")
+    // dices[d].textContent = state.dice[d].value
+    dices[d].className = "dice"
+    if (state.turnState != TurnState.FirstRoll) addClass(dices[d], `d${state.dice[d].value}`)
+    if (state.dice[d].keep) addClass(dices[d], "keep")
   }
   for (var pi = 0; pi < state.playerCount; pi++) {
     dom.header[pi].className = (state.currentPlayer == pi) ? "active" : ""

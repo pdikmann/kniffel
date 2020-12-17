@@ -33,7 +33,7 @@ let state = {
   dice: [],
   score: [], // per player
   turnState: TurnState.FirstRoll,
-  msg: "reroll"
+  bonus: 0
 }
 
 function advanceTurn(state) {
@@ -100,6 +100,10 @@ ui.selectMatch = (n) => {
   if (match.done) return
   match.done = true
   state.score[n] = matches[n].fn(diceValues(state))
+  if (state.bonus == 0) {
+    if (state.score.slice(0, 6).filter(x => x == 0).length > 0) state.bonus = -1
+    if (state.score.slice(0, 6).filter(x => x > 0).length == 6) state.bonus = 35
+  }
   unkeep(state)
   nextTurn(state)
   render(state)
@@ -154,15 +158,17 @@ function render(state) {
       match.className = ""
     }
   }
-  if (state.score.slice(0, 6).filter(x => x > 0).length == 6) {
-    dom.bonus.textContent = "35"
+  if (state.bonus > 0) {
+    dom.bonus.textContent = state.bonus
     dom.bonus.className = "ok done"
   }
-  if (state.score.slice(0, 6).filter(x => x == 0).length > 0) {
+  if (state.bonus < 0) {
     dom.bonus.textContent = "0"
     dom.bonus.className = "zero done"
   }
-  dom.rollButton.textContent = state.msg
+  dom.sumTop.textContent = state.score.slice(0, 6).filter(identity).reduce(sum, 0) + state.bonus
+  dom.sumBottom.textContent = state.score.slice(6).filter(identity).reduce(sum, 0)
+  dom.sum.textContent = state.score.filter(identity).reduce(sum,0) + state.bonus
 }
 
 function makeTable(parent) {
@@ -246,6 +252,14 @@ function stringAdd(original, additional) {
 function stringRemove(original, removal) {
   let s = original.split(" ")
   return s.filter(x => x != removal).join(" ")
+}
+
+function sum(a, b) {
+  return a + b
+}
+
+function identity(x) {
+  return x
 }
 
 //  ████████ ███████ ███████ ████████ 

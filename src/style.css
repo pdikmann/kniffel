@@ -16,6 +16,15 @@
   background-color: blue;
 }
 
+#reroll {
+  line-height: 200%;
+  background-color: lightblue;
+}
+
+#reroll.inactive {
+  background-color: gray;
+}
+
 #scoreboard table {
   /* border: 1px solid black; */
   border-collapse: collapse;

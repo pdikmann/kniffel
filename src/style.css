@@ -23,6 +23,7 @@
 
 #wrapper {
   background-color: var(--felt-color);
+  padding-bottom: var(--unit);
 }
 
 #dices {
@@ -62,10 +63,29 @@
   background-color: gray;
 }
 
+.config {
+  display: flex;
+  justify-content: space-between;
+  margin: var(--half-unit) var(--half-unit) 0;
+}
+
+.config div {
+  border-radius: var(--quarter-unit);
+  box-shadow: var(--clickable-shadow);
+  background-color: var(--interactive-color);
+  min-height: var(--two-unit);
+  color: white;
+  text-align: center;
+  padding: var(--half-unit);
+  margin: 0 var(--half-unit);
+  /* line-height: var(--two-unit); */
+  /* white-space: pre-wrap; */
+}
+
 #scoreboard table {
   border-collapse: separate;
   border-spacing: var(--half-unit) var(--unit-8th);
-  margin: var(--unit) auto 0;
+  margin: var(--unit) 0 0 var(--half-unit);
 }
 
 #scoreboard tr {
@@ -88,7 +108,7 @@
 
 #scoreboard td.row-label {
   color: rgba(0, 0, 0, 0.4);
-  text-align: center;
+  /* text-align: center; */
 }
 
 #scoreboard td.sum {

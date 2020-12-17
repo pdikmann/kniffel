@@ -9,7 +9,6 @@ window.onload = () => {
   runAllTests()
   getDOM(dom)
   makeTable2(dom.scoreboard)
-  rollAll(state)
   render(state)
 }
 
@@ -27,19 +26,26 @@ let TurnState = {
   MAX: 3
 }
 
-let state = {
-  currentPlayer: 0,
-  playerCount: 4,
-  dice: [],
-  score: [
-    [],
-    [],
-    [],
-    []
-  ], // per player
-  turnState: TurnState.FirstRoll,
-  bonus: [0, 0, 0, 0],
-  bonusFlag: [0, 0, 0, 0] // -1 for fail, 1 for success
+let state = freshState(1)
+
+function freshState(playerCount) {
+  let ps = []
+  for (var i = 0; i < playerCount; i++) ps.push(i)
+  let s = {
+    currentPlayer: 0,
+    playerCount: playerCount,
+    dice: [],
+    // all following per player
+    score: [],
+    turnState: TurnState.FirstRoll,
+    bonus: [0],
+    bonusFlag: [0] // -1 for fail, 1 for success
+  }
+  rollAll(s)
+  s.score = ps.map(_ => [])
+  s.bonus = ps.map(_ => 0)
+  s.bonusFlag = ps.map(_ => 0)
+  return s
 }
 
 function advanceTurn(state) {
@@ -98,6 +104,7 @@ ui.reroll = () => {
 }
 
 ui.keep = (n) => {
+  if (state.turnState == TurnState.FirstRoll) return;
   state.dice[n].keep = !state.dice[n].keep
   render(state)
 }
@@ -123,23 +130,46 @@ ui.selectMatch = (n, pi) => {
   render(state)
 }
 
+ui.reset = () => {
+  dom.scoreboard.removeChild(dom.scoreboard.lastChild)
+  state = freshState(state.playerCount)
+  dom = freshDOM()
+  getDOM(dom)
+  makeTable2(dom.scoreboard)
+  render(state)
+}
+
+ui.morePlayers = () => {
+  state.playerCount += 1
+  ui.reset()
+}
+
+ui.lessPlayers = () => {
+  state.playerCount = Math.max(1, state.playerCount - 1)
+  ui.reset()
+}
+
 //  ██████   ██████  ███    ███ 
 //  ██   ██ ██    ██ ████  ████ 
 //  ██   ██ ██    ██ ██ ████ ██ 
 //  ██   ██ ██    ██ ██  ██  ██ 
 //  ██████   ██████  ██      ██ 
 
-let dom = {
-  dices: [],
-  rollButton: {},
-  scoreboard: {},
-  // all following are per player
-  header: [],
-  matches: [],
-  bonus: [],
-  sumTop: [],
-  sumBottom: [],
-  sum: []
+let dom = freshDOM()
+
+function freshDOM() {
+  return {
+    dices: [],
+    rollButton: {},
+    scoreboard: {},
+    // all following are per player
+    header: [],
+    matches: [],
+    bonus: [],
+    sumTop: [],
+    sumBottom: [],
+    sum: []
+  }
 }
 
 function getDOM(dom) {
@@ -184,7 +214,7 @@ function render(state) {
       if (dom.matches[pi][m].done) {
         addClass(match, "done")
       }
-      match.textContent = (score > 0) ? score : "-"
+      match.textContent = (score > 0) ? score : "—"
       if ((state.currentPlayer != pi || state.turnState == TurnState.FirstRoll) && !dom.matches[pi][m].done) {
         match.textContent = ""
         match.className = "match"
@@ -194,7 +224,7 @@ function render(state) {
       dom.bonus[pi].textContent = state.bonus[pi]
       // dom.bonus[pi].className = "bonus ok done"
     } else if (state.bonusFlag[pi] < 0) {
-      dom.bonus[pi].textContent = "-"
+      dom.bonus[pi].textContent = "—"
       // dom.bonus[pi].className = "bonus zero done"
     } else {
       dom.bonus[pi].textContent = ""
@@ -210,9 +240,9 @@ function makeTable2(parent) {
   let trs = []
   trs.push("")
   for (var i = 0; i < 6; i++) trs.push(matches[i].label)
-  trs.push("Bonus", "Summe Oben")
+  trs.push("Bonus", "Summe\nOben")
   for (var i = 6; i < matches.length; i++) trs.push(matches[i].label)
-  trs.push("Summe Unten", "Summe")
+  trs.push("Summe\nUnten", "Summe")
   let players = [],
     tds = []
   for (var i = 0; i < state.playerCount; i++) players.push(i)

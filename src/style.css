@@ -2,6 +2,7 @@
   display: flex;
   align-content: space-between;
 }
+
 .dice {
   display: inline-block;
   border: 1px solid black;
@@ -10,7 +11,7 @@
 }
 
 .dice.keep {
-  background-color: blue;
+  background-color: lightblue;
 }
 
 #reroll {
@@ -27,18 +28,27 @@
   /* border: 1px solid black; */
   border-collapse: collapse;
 }
+
+#scoreboard th.active {
+  background-color: lightblue;
+}
+
 #scoreboard td, #scoreboard th {
   border: 1px solid black;
 }
+
 #scoreboard td.zero {
   background-color: red;
 }
+
 #scoreboard td.ok {
   background-color: green;
 }
+
 #scoreboard td.ok.done {
   background-color: lightgreen;
 }
+
 #scoreboard td.zero.done {
   background-color: pink;
 }

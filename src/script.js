@@ -49,6 +49,7 @@ function advanceTurn(state) {
 
 function nextTurn(state) {
   state.turnState = TurnState.FirstRoll
+  state.currentPlayer = (state.currentPlayer + 1) % state.playerCount
 }
 
 function unkeep(state) {
@@ -103,6 +104,7 @@ ui.keep = (n) => {
 
 ui.selectMatch = (n, pi) => {
   if (state.turnState == TurnState.FirstRoll) return
+  if (state.currentPlayer != pi) return
   let match = dom.matches[pi][n]
   if (match.done) return
   match.done = true
@@ -131,6 +133,8 @@ let dom = {
   dices: [],
   rollButton: {},
   scoreboard: {},
+  // all following are per player
+  header: [],
   matches: [],
   bonus: [],
   sumTop: [],
@@ -152,6 +156,7 @@ function render(state) {
     dices[d].className = "dice" + (state.dice[d].keep ? " keep" : "")
   }
   for (var pi = 0; pi < state.playerCount; pi++) {
+    dom.header[pi].className = (state.currentPlayer == pi) ? "active" : ""
     for (var m = 0; m < dom.matches[pi].length; m++) {
       let match = dom.matches[pi][m].element,
         oldScore = state.score[pi][m],
@@ -165,7 +170,7 @@ function render(state) {
         addClass(match, "done")
       }
       match.textContent = score
-      if (state.turnState == TurnState.FirstRoll && !dom.matches[pi][m].done) {
+      if ((state.currentPlayer != pi || state.turnState == TurnState.FirstRoll) && !dom.matches[pi][m].done) {
         match.textContent = ""
         match.className = ""
       }
@@ -199,13 +204,14 @@ function makeTable2(parent) {
   // then make [] of all match functions
   // then zip it up
   players.forEach((_, pi) => {
+    dom.header[pi] = {}
     dom.bonus[pi] = {}
     dom.sumTop[pi] = {}
     dom.sumBottom[pi] = {}
     dom.sum[pi] = {}
     dom.matches[pi] = matches.map(_ => {})
     let td = []
-    td.push((tr) => mk.td(tr, `Spieler ${pi}`))
+    td.push((tr) => dom.header[pi] = mk.th(tr, `Spieler ${pi}`))
     for (var m1 = 0; m1 < 6; m1++) mishMatch(td, m1, pi)
     td.push((tr) => dom.bonus[pi] = mk.td(tr, 0))
     td.push((tr) => dom.sumTop[pi] = mk.td(tr, 0))
@@ -306,6 +312,7 @@ mk.createIn = (target, elm, txt) => {
 }
 mk.tr = (target) => mk.createIn(target, "tr")
 mk.td = (target, txt) => mk.createIn(target, "td", txt)
+mk.th = (target, txt) => mk.createIn(target, "th", txt)
 
 
 //  ██    ██ ████████ ██ ██      ███████ 

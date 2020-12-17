@@ -179,9 +179,11 @@ function render(state) {
       dom.bonus[pi].textContent = state.bonus[pi]
       dom.bonus[pi].className = "ok done"
     }
-    if (state.bonusFlag[pi] < 0) {
+    else if (state.bonusFlag[pi] < 0) {
       dom.bonus[pi].textContent = state.bonus[pi]
       dom.bonus[pi].className = "zero done"
+    } else {
+      dom.bonus[pi].textContent = ""
     }
     dom.sumTop[pi].textContent = state.score[pi].slice(0, 6).filter(identity).reduce(sum, 0) + state.bonus[pi]
     dom.sumBottom[pi].textContent = state.score[pi].slice(6).filter(identity).reduce(sum, 0)

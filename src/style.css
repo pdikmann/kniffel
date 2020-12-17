@@ -7,8 +7,8 @@
   --three-unit: calc(var(--unit) * 3);
   --felt-color: #77a07d;
   --interactive-color: #57a9c3;
-  --negative-color: red;
-  --positive-color: green;
+  --negative-color: #ff5757;
+  --positive-color: #50c750;
   --clickable-shadow: var(--unit-8th) var(--unit-8th) var(--unit-8th) rgba(0, 0, 0, 0.3),
     0 0 var(--unit-8th) rgba(0, 0, 0, 0.3);
   --inset-shadow: inset var(--unit-8th) var(--quarter-unit) var(--unit-8th) rgba(0, 0, 0, 0.2);
@@ -29,7 +29,7 @@
 #bottom-wrapper {
   width: 100vmin;
   height: 10px;
-  height: calc(var(--fullheight) - var(--unit) * 5);
+  height: calc(var(--fullheight) - var(--unit) * 4.5);
   overflow: scroll;
 }
 
@@ -37,9 +37,9 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  width: calc(100vmin - var(--two-unit));
-  margin-left: var(--unit);
-  padding-top: var(--unit);
+  width: calc(100vmin - var(--unit));
+  margin-left: var(--half-unit);
+  padding-top: var(--half-unit);
 }
 
 .dice {
@@ -60,9 +60,9 @@
   border-radius: var(--quarter-unit);
   box-shadow: var(--clickable-shadow);
   background-color: var(--interactive-color);
-  width: calc(100vmin - var(--two-unit));
+  width: calc(100vmin - var(--unit));
   min-height: calc(var(--unit) + var(--half-unit));
-  margin: var(--half-unit) var(--unit) 0;
+  margin: var(--half-unit) var(--half-unit) 0;
   color: white;
   text-align: center;
   line-height: calc(var(--unit) + var(--half-unit));
@@ -75,7 +75,7 @@
 .config {
   display: flex;
   justify-content: space-between;
-  margin: var(--half-unit) var(--half-unit) 0;
+  /* margin: var(--half-unit) 0 0; */
 }
 
 .config div {
@@ -92,7 +92,7 @@
 #scoreboard table {
   border-collapse: separate;
   border-spacing: var(--half-unit) var(--unit-8th);
-  margin: var(--half-unit) 0 0 var(--half-unit);
+  margin: var(--half-unit) auto;
 }
 
 #scoreboard tr {

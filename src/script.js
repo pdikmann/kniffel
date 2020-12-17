@@ -33,7 +33,8 @@ let state = {
   dice: [],
   score: [], // per player
   turnState: TurnState.FirstRoll,
-  bonus: 0
+  bonus: 0,
+  bonusFlag: 0 // -1 for fail, 1 for success
 }
 
 function advanceTurn(state) {
@@ -96,13 +97,19 @@ ui.keep = (n) => {
 }
 
 ui.selectMatch = (n) => {
+  if (state.turnState == TurnState.FirstRoll) return
   let match = dom.matches[n]
   if (match.done) return
   match.done = true
   state.score[n] = matches[n].fn(diceValues(state))
-  if (state.bonus == 0) {
-    if (state.score.slice(0, 6).filter(x => x == 0).length > 0) state.bonus = -1
-    if (state.score.slice(0, 6).filter(x => x > 0).length == 6) state.bonus = 35
+  if (state.bonusFlag == 0) {
+    if (state.score.slice(0, 6).filter(x => x == 0).length > 0) {
+      state.bonusFlag = -1
+    }
+    if (state.score.slice(0, 6).filter(x => x > 0).length == 6) {
+      state.bonusFlag = 1
+      state.bonus = 35
+    }
   }
   unkeep(state)
   nextTurn(state)
@@ -133,6 +140,7 @@ function getDOM(dom) {
 }
 
 function render(state) {
+  dom.rollButton.className = (state.turnState == TurnState.MatchSelect) ? "inactive" : ""
   let dices = dom.dices;
   for (var d = 0; d < dices.length; ++d) {
     dices[d].textContent = state.dice[d].value
@@ -158,12 +166,12 @@ function render(state) {
       match.className = ""
     }
   }
-  if (state.bonus > 0) {
+  if (state.bonusFlag > 0) {
     dom.bonus.textContent = state.bonus
     dom.bonus.className = "ok done"
   }
-  if (state.bonus < 0) {
-    dom.bonus.textContent = "0"
+  if (state.bonusFlag < 0) {
+    dom.bonus.textContent = state.bonus
     dom.bonus.className = "zero done"
   }
   dom.sumTop.textContent = state.score.slice(0, 6).filter(identity).reduce(sum, 0) + state.bonus

@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html>
-	<head>
-    <meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <link rel="stylesheet" href="style.css">
-	</head>
-	<body>
-    <div id="wrapper">
-			<p>Würfel tappen zum behalten</p>
-			<div id="dices">
-				<div class="dice" onclick="ui.keep(0)"></div>
-				<div class="dice" onclick="ui.keep(1)"></div>
-				<div class="dice" onclick="ui.keep(2)"></div>
-				<div class="dice" onclick="ui.keep(3)"></div>
-				<div class="dice" onclick="ui.keep(4)"></div>
-			</div>
-			<div class="buttons">
-				<div id="reroll" onclick="ui.reroll()">
-					Würfeln
-				</div>
-			</div>
-			<div id="scoreboard">
-			</div>
-    </div>
-		<script src="matches.js"></script>
-		<script src="script.js"></script>
-	</body>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<div id="wrapper">
+		<p>Würfel tappen zum behalten</p>
+		<div id="dices">
+			<div class="dice" onclick="ui.keep(0)"></div>
+			<div class="dice" onclick="ui.keep(1)"></div>
+			<div class="dice" onclick="ui.keep(2)"></div>
+			<div class="dice" onclick="ui.keep(3)"></div>
+			<div class="dice" onclick="ui.keep(4)"></div>
+		</div>
+		<div id="reroll" onclick="ui.reroll()">
+			Würfeln
+		</div>
+		<div id="scoreboard">
+		</div>
+	</div>
+	<script src="matches.js"></script>
+	<script src="script.js"></script>
+</body>
+
 </html>

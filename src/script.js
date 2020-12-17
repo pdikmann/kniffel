@@ -150,6 +150,20 @@ function getDOM(dom) {
 
 function render(state) {
   dom.rollButton.className = (state.turnState == TurnState.MatchSelect) ? "inactive" : ""
+  switch (state.turnState) {
+    case TurnState.FirstRoll:
+      dom.rollButton.textContent = "Wurf 1"
+      break;
+    case TurnState.SecondRoll:
+      dom.rollButton.textContent = "Wurf 2"
+      break;
+    case TurnState.ThirdRoll:
+      dom.rollButton.textContent = "Wurf 3"
+      break;
+    case TurnState.MatchSelect:
+      dom.rollButton.textContent = "Kategorie wählen"
+      break;
+  }
   let dices = dom.dices;
   for (var d = 0; d < dices.length; ++d) {
     dices[d].textContent = state.dice[d].value
@@ -161,27 +175,27 @@ function render(state) {
       let match = dom.matches[pi][m].element,
         oldScore = state.score[pi][m],
         score = (oldScore == undefined) ? matches[m].fn(diceValues(state)) : oldScore
+      match.className = "match"
       if (score == 0) {
-        match.className = "zero"
+        addClass(match, "zero")
       } else {
-        match.className = "ok"
+        addClass(match, "ok")
       }
       if (dom.matches[pi][m].done) {
         addClass(match, "done")
       }
-      match.textContent = score
+      match.textContent = (score > 0) ? score : "-"
       if ((state.currentPlayer != pi || state.turnState == TurnState.FirstRoll) && !dom.matches[pi][m].done) {
         match.textContent = ""
-        match.className = ""
+        match.className = "match"
       }
     }
     if (state.bonusFlag[pi] > 0) {
       dom.bonus[pi].textContent = state.bonus[pi]
-      dom.bonus[pi].className = "ok done"
-    }
-    else if (state.bonusFlag[pi] < 0) {
-      dom.bonus[pi].textContent = state.bonus[pi]
-      dom.bonus[pi].className = "zero done"
+      // dom.bonus[pi].className = "bonus ok done"
+    } else if (state.bonusFlag[pi] < 0) {
+      dom.bonus[pi].textContent = "-"
+      // dom.bonus[pi].className = "bonus zero done"
     } else {
       dom.bonus[pi].textContent = ""
     }
@@ -194,7 +208,7 @@ function render(state) {
 function makeTable2(parent) {
   let table = mk.table()
   let trs = []
-  trs.push("Kategorie")
+  trs.push("")
   for (var i = 0; i < 6; i++) trs.push(matches[i].label)
   trs.push("Bonus", "Summe Oben")
   for (var i = 6; i < matches.length; i++) trs.push(matches[i].label)
@@ -213,18 +227,19 @@ function makeTable2(parent) {
     dom.sum[pi] = {}
     dom.matches[pi] = matches.map(_ => {})
     let td = []
-    td.push((tr) => dom.header[pi] = mk.th(tr, `Spieler ${pi}`))
+    td.push((tr) => dom.header[pi] = mk.th(tr, `${pi}`))
     for (var m1 = 0; m1 < 6; m1++) mishMatch(td, m1, pi)
-    td.push((tr) => dom.bonus[pi] = mk.td(tr, 0))
-    td.push((tr) => dom.sumTop[pi] = mk.td(tr, 0))
+    td.push((tr) => dom.bonus[pi] = addClass(mk.td(tr, 0), "sum"))
+    td.push((tr) => dom.sumTop[pi] = addClass(mk.td(tr, 0), "sum"))
     for (var m2 = 6; m2 < matches.length; m2++) mishMatch(td, m2, pi)
-    td.push((tr) => dom.sumBottom[pi] = mk.td(tr, 0))
-    td.push((tr) => dom.sum[pi] = mk.td(tr, 0))
+    td.push((tr) => dom.sumBottom[pi] = addClass(mk.td(tr, 0), "sum"))
+    td.push((tr) => dom.sum[pi] = addClass(mk.td(tr, 0), "sum"))
     tds.push(td)
   })
   trs.forEach((row, i) => {
     let tr = mk.tr(table)
-    mk.td(tr, row)
+    let rowHead = mk.td(tr, row)
+    rowHead.className = "row-label"
     players.forEach((player, j) => {
       tds[j][i](tr)
     })

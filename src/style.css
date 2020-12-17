@@ -1,13 +1,46 @@
+:root {
+  --unit: calc(100/13 * 1vmin);
+  --unit-8th: calc(var(--unit) / 8);
+  --quarter-unit: calc(var(--unit) / 4);
+  --half-unit: calc(var(--unit) / 2);
+  --two-unit: calc(var(--unit) * 2);
+  --three-unit: calc(var(--unit) * 3);
+  --felt-color: #77a07d;
+  --interactive-color: #57a9c3;
+  --negative-color: red;
+  --positive-color: green;
+  --clickable-shadow: var(--unit-8th) var(--unit-8th) var(--unit-8th) rgba(0, 0, 0, 0.3),
+    0 0 var(--unit-8th) rgba(0, 0, 0, 0.3);
+  --inset-shadow: inset var(--unit-8th) var(--quarter-unit) var(--unit-8th) rgba(0, 0, 0, 0.2);
+  --inside-border-shadow: inset 0 0 0 var(--unit-8th) white;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-size: calc(var(--unit) * 0.65);
+}
+
+#wrapper {
+  background-color: var(--felt-color);
+}
+
 #dices {
   display: flex;
-  align-content: space-between;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100vmin;
 }
 
 .dice {
   display: inline-block;
   border: 1px solid black;
-  width: 30px;
-  height: 30px;
+  min-width: var(--three-unit);
+  min-height: var(--three-unit);
+  margin: var(--unit) var(--half-unit) 0;
+  background-color: white;
+  text-align: center;
+  line-height: var(--three-unit);
 }
 
 .dice.keep {
@@ -15,9 +48,14 @@
 }
 
 #reroll {
-  border: 1px solid black;
-  line-height: 200%;
-  background-color: lightblue;
+  border-radius: var(--quarter-unit);
+  box-shadow: var(--clickable-shadow);
+  background-color: var(--interactive-color);
+  min-height: var(--two-unit);
+  margin: var(--unit) var(--unit) 0;
+  color: white;
+  text-align: center;
+  line-height: var(--two-unit);
 }
 
 #reroll.inactive {
@@ -25,30 +63,71 @@
 }
 
 #scoreboard table {
-  /* border: 1px solid black; */
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: var(--half-unit) var(--unit-8th);
+  margin: var(--unit) auto 0;
+}
+
+#scoreboard tr {
+  height: var(--two-unit);
+}
+
+#scoreboard tr:first-child {
+  height: var(--unit);
+}
+
+#scoreboard th {
+  border-radius: var(--quarter-unit);
+  background-color: rgba(0, 0, 0, .25);
+  color: var(--felt-color);
 }
 
 #scoreboard th.active {
-  background-color: lightblue;
+  background-color: black;
 }
 
-#scoreboard td, #scoreboard th {
-  border: 1px solid black;
+#scoreboard td.row-label {
+  color: rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+#scoreboard td.sum {
+  min-width: var(--two-unit);
+  text-align: center;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+#scoreboard td.match {
+  border-radius: var(--quarter-unit);
+  box-shadow: var(--inset-shadow);
+  background-color: white;
+  min-width: var(--two-unit);
+  text-align: center;
 }
 
 #scoreboard td.zero {
-  background-color: red;
+  background-color: var(--negative-color);
+  box-shadow: var(--inset-shadow),
+    var(--inside-border-shadow);
+  color: white;
 }
 
 #scoreboard td.ok {
-  background-color: green;
+  background-color: var(--positive-color);
+  box-shadow: var(--inset-shadow),
+    var(--inside-border-shadow);
+  color: white;
+}
+
+#scoreboard td.done {
+  box-shadow: var(--inset-shadow);
+  background-color: white;
 }
 
 #scoreboard td.ok.done {
-  background-color: lightgreen;
+  color: black;
 }
 
 #scoreboard td.zero.done {
-  background-color: pink;
+  color: gray;
 }

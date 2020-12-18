@@ -37,6 +37,7 @@ function freshState(playerCount) {
     currentPlayer: 0,
     playerCount: playerCount,
     dice: [],
+    gameOver: false,
     // all following per player
     score: [],
     turnState: TurnState.FirstRoll,
@@ -58,6 +59,9 @@ function advanceTurn(state) {
 function nextTurn(state) {
   state.turnState = TurnState.FirstRoll
   state.currentPlayer = (state.currentPlayer + 1) % state.playerCount
+  if (state.currentPlayer == 0 && state.score[0].filter(notUndefined).length == 13) {
+    state.gameOver = true
+  }
 }
 
 function unkeep(state) {
@@ -100,6 +104,10 @@ let ui = {}
 
 ui.reroll = () => {
   if (state.turnState == TurnState.MatchSelect) return
+  if (state.gameOver) {
+    ui.reset()
+    return
+  }
   advanceTurn(state)
   rollAll(state)
   render(state)
@@ -194,6 +202,10 @@ function sum(a, b) {
 
 function identity(x) {
   return x
+}
+
+function notUndefined(x) {
+  return typeof(x) != "undefined"
 }
 
 //  ████████ ███████ ███████ ████████ 

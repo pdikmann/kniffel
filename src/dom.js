@@ -37,6 +37,10 @@ function render(state) {
       dom.rollButton.textContent = "Kategorie wählen"
       break;
   }
+  if (state.gameOver) {
+    dom.rollButton.textContent = "Neues Spiel"
+    dom.rollButton.className = "new-game"
+  }
   let dices = dom.dices;
   for (var d = 0; d < dices.length; ++d) {
     // dices[d].textContent = state.dice[d].value

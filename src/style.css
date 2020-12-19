@@ -1,5 +1,18 @@
 :root {
   --unit: calc(100/13 * 1vmin);
+}
+
+@media only screen and (min-width: 375px) {
+  :root {
+    --unit: calc(100/13 * 3.75px);
+  }
+  #wrapper {
+    margin-left: calc((100vmin - var(--full-width))/2);
+  }
+}
+
+:root {
+  --full-width: calc(var(--unit) * 13);
   --unit-8th: calc(var(--unit) / 8);
   --quarter-unit: calc(var(--unit) / 4);
   --half-unit: calc(var(--unit) / 2);
@@ -22,8 +35,12 @@
   font-size: calc(var(--unit) * 0.65);
 }
 
-#wrapper {
+body {
   background-color: var(--felt-color);
+}
+
+#wrapper {
+  width: var(--full-width);
   padding-bottom: var(--unit);
   background-image: url(../gfx/lock2.png), url(../gfx/0.png),
     url(../gfx/1.png), url(../gfx/2.png),
@@ -35,7 +52,7 @@
 }
 
 #bottom-wrapper {
-  width: 100vmin;
+  width: var(--full-width);
   height: 10px;
   height: calc(var(--fullheight) - var(--unit) * 4.5);
   overflow: scroll;
@@ -45,7 +62,7 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  width: calc(100vmin - var(--unit));
+  width: calc(var(--full-width) - var(--unit));
   margin-left: var(--half-unit);
   padding-top: var(--half-unit);
 }
@@ -119,7 +136,7 @@
   border-radius: var(--quarter-unit);
   box-shadow: var(--clickable-shadow);
   background-color: var(--interactive-color);
-  width: calc(100vmin - var(--unit));
+  width: calc(var(--full-width) - var(--unit));
   min-height: calc(var(--unit) + var(--half-unit));
   margin: var(--half-unit) var(--half-unit) 0;
   color: white;

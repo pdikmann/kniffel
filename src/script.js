@@ -5,6 +5,7 @@
 // turn state machine: roll0, [roll1, roll2], selectSlot
 // create table, store score td for each match
 // on render check matches for current dice and current player
+let animationDuration = 175
 window.onload = () => {
   let fullheight = window.innerHeight,
     fullwidth = Math.min(window.innerWidth, 375),
@@ -13,6 +14,7 @@ window.onload = () => {
     topContentHeight = unit * 4.5,
     bottomWrapperHeight = Math.min(fullheight - topContentHeight, tableContentHeight)
   document.documentElement.style.setProperty('--bottom-wrapper-height', `${bottomWrapperHeight}px`)
+  document.documentElement.style.setProperty('--animation-duration', `${animationDuration}ms`)
   runAllTests()
   getDOM(dom)
   makeTable2(dom.scoreboard)
@@ -42,6 +44,7 @@ function freshState(playerCount) {
     currentPlayer: 0,
     playerCount: playerCount,
     dice: [],
+    rolling: false,
     gameOver: false,
     // all following per player
     score: [],
@@ -78,14 +81,17 @@ function unkeep(state) {
 function rollAll(state) {
   let dice = state.dice
   for (let i = 0; i < 5; i++) {
-    if (dice[i] && dice[i].keep) continue
+    if (dice[i] && dice[i].keep) {
+      dice[i].lastRolled = false
+      continue
+    }
     dice[i] = {
       value: Math.ceil(Math.random() * 6),
       lastRolled: true,
       keep: false
     }
   }
-  dice.sort((a, b) => a.value - b.value)
+  // dice.sort((a, b) => a.value - b.value)
   return state
 }
 
@@ -94,6 +100,7 @@ function diceValues(state) {
   for (var d = 0; d < state.dice.length; d++) {
     values.push(state.dice[d].value)
   }
+  values.sort()
   return values
 }
 
@@ -115,7 +122,9 @@ ui.reroll = () => {
   }
   advanceTurn(state)
   rollAll(state)
+  state.rolling = true
   render(state)
+  state.rolling = false
 }
 
 ui.keep = (n) => {

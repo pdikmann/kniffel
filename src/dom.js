@@ -46,7 +46,14 @@ function render(state) {
     // dices[d].textContent = state.dice[d].value
     dices[d].className = "dice"
     if (state.turnState != TurnState.FirstRoll) addClass(dices[d], `d${state.dice[d].value}`)
-    if (state.dice[d].keep) addClass(dices[d], "keep")
+    if (state.dice[d].keep) {
+      addClass(dices[d], "keep")
+    }
+    if (state.rolling && state.dice[d].lastRolled) {
+      addClass(dices[d], "animate")
+      let dto = d
+      setTimeout(() => removeClass(dices[dto], "animate"), animationDuration)
+    }
   }
   for (var pi = 0; pi < state.playerCount; pi++) {
     dom.header[pi].className = (state.currentPlayer == pi) ? "active" : ""

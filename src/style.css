@@ -227,14 +227,17 @@ body {
 }
 
 #scoreboard td.done {
-  box-shadow: var(--inset-shadow);
-  background-color: white;
+  box-shadow: none;
+  background-color: var(--felt-color);
+  color: rgba(0,0,0,.4)
+
 }
 
 #scoreboard td.ok.done {
-  color: black;
+  /* color: black; */
 }
 
 #scoreboard td.zero.done {
-  color: rgba(0, 0, 0, .25);
+  /* color: rgba(0, 0, 0, .25); */
+  /* color: rgba(0,0,0,.4) */
 }

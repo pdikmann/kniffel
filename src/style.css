@@ -37,6 +37,8 @@
 
 body {
   background-color: var(--felt-color);
+  background-image: url(../gfx/noise.png);
+  background-blend-mode: overlay;
 }
 
 #wrapper {

@@ -78,7 +78,7 @@ body {
     transform: none;
   }
 
-  50% {
+  70% {
     animation-timing-function: cubic-bezier(.5, 0, 1, .5);
     transform: translateY(calc(-1 * var(--unit))) rotateZ(90deg);
   }
@@ -137,12 +137,6 @@ body {
   background-size: contain;
 }
 
-.dice.animate {
-  animation-name: dicehop;
-  animation-duration: var(--animation-duration, 5000ms);
-  animation-timing-function: ease-out;
-  /* transform-origin: center bottom; */
-}
 
 .dice.d1 {
   background-image: url(../gfx/1.png);
@@ -196,6 +190,14 @@ body {
   background-image: var(--lock-image), url(../gfx/6.png);
 }
 
+.dice.animate {
+  animation-name: dicehop;
+  animation-duration: var(--animation-duration, 5000ms);
+  animation-timing-function: ease-out;
+  /* transform-origin: center bottom; */
+  /* background-image: url(../gfx/0.png); */
+}
+
 #reroll {
   position: relative;
   border-radius: var(--quarter-unit);
@@ -221,14 +223,12 @@ body {
 .config {
   display: flex;
   justify-content: space-between;
-  /* margin: var(--half-unit) 0 0; */
 }
 
 .config div {
   border-radius: var(--quarter-unit);
   box-shadow: var(--clickable-shadow);
   background-color: var(--interactive-color);
-  /* min-height: var(--two-unit); */
   color: white;
   text-align: center;
   padding: var(--half-unit);
@@ -293,7 +293,7 @@ body {
 
 #scoreboard td.done {
   box-shadow: none;
-  background-color: var(--felt-color);
+  background-color: transparent;
   color: rgba(0, 0, 0, .4)
 }
 

@@ -6,8 +6,13 @@
 // create table, store score td for each match
 // on render check matches for current dice and current player
 window.onload = () => {
-  let fullheight = window.innerHeight
-  document.documentElement.style.setProperty('--fullheight', `${fullheight}px`)
+  let fullheight = window.innerHeight,
+    fullwidth = Math.min(window.innerWidth, 375),
+    unit = Math.min(fullheight, fullwidth) / 13,
+    tableContentHeight = unit * 29.625,
+    topContentHeight = unit * 4.5,
+    bottomWrapperHeight = Math.min(fullheight - topContentHeight, tableContentHeight)
+  document.documentElement.style.setProperty('--bottom-wrapper-height', `${bottomWrapperHeight}px`)
   runAllTests()
   getDOM(dom)
   makeTable2(dom.scoreboard)

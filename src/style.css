@@ -54,7 +54,7 @@ body {
 #bottom-wrapper {
   width: var(--full-width);
   height: 10px;
-  height: calc(var(--fullheight) - var(--unit) * 4.5);
+  height: var(--bottom-wrapper-height, 100vh);
   overflow: scroll;
 }
 

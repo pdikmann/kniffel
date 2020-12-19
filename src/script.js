@@ -81,13 +81,9 @@ function unkeep(state) {
 function rollAll(state) {
   let dice = state.dice
   for (let i = 0; i < 5; i++) {
-    if (dice[i] && dice[i].keep) {
-      dice[i].lastRolled = false
-      continue
-    }
+    if (dice[i] && dice[i].keep) continue
     dice[i] = {
       value: Math.ceil(Math.random() * 6),
-      lastRolled: true,
       keep: false
     }
   }

@@ -48,8 +48,7 @@ function render(state) {
     if (state.turnState != TurnState.FirstRoll) addClass(dices[d], `d${state.dice[d].value}`)
     if (state.dice[d].keep) {
       addClass(dices[d], "keep")
-    }
-    if (state.rolling && state.dice[d].lastRolled) {
+    } else if (state.rolling) {
       addClass(dices[d], "animate")
       let dto = d
       setTimeout(() => removeClass(dices[dto], "animate"), animationDuration)

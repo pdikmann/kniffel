@@ -125,6 +125,7 @@ function diceValues(state) {
 let ui = {}
 
 ui.reroll = () => {
+  if (state.rolling) return
   if (state.turnState == TurnState.MatchSelect) return
   if (state.gameOver) {
     ui.reset()
@@ -132,21 +133,23 @@ ui.reroll = () => {
   }
   state.rolling = true
   render(state)
-  state.rolling = false
   setTimeout(() => {
     rollAll(state)
     advanceTurn(state)
+    state.rolling = false
     render(state)
   }, animationDuration)
 }
 
 ui.keep = (n) => {
+  if (state.rolling) return
   if (state.turnState == TurnState.FirstRoll) return;
   state.dice[n].keep = !state.dice[n].keep
   render(state)
 }
 
 ui.selectMatch = (n, pi) => {
+  if (state.rolling) return
   if (state.turnState == TurnState.FirstRoll) return
   if (state.currentPlayer != pi) return
   let match = dom.matches[pi][n]
@@ -168,6 +171,7 @@ ui.selectMatch = (n, pi) => {
 }
 
 ui.reset = () => {
+  if (state.rolling) return
   dom.scoreboard.removeChild(dom.scoreboard.lastChild)
   state = freshState(state.playerCount)
   dom = freshDOM()
@@ -177,11 +181,13 @@ ui.reset = () => {
 }
 
 ui.morePlayers = () => {
+  if (state.rolling) return
   state.playerCount += 1
   ui.reset()
 }
 
 ui.lessPlayers = () => {
+  if (state.rolling) return
   state.playerCount = Math.max(1, state.playerCount - 1)
   ui.reset()
 }

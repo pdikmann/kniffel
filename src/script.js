@@ -32,6 +32,7 @@ window.onload = () => {
   getDOM(dom)
   makeTable2(dom.scoreboard)
   render(state)
+  removeClass(document.getElementById('wrapper'), 'hidden')
 }
 
 //  ███████ ████████  █████  ████████ ███████ 

@@ -100,6 +100,7 @@ body {
   border-radius: var(--quarter-unit);
   background-color: #d8d8d8;
   box-shadow: var(--clickable-shadow);
+  cursor: pointer;
 }
 
 .dice.blank .pip-row {
@@ -210,6 +211,7 @@ body {
   color: white;
   text-align: center;
   line-height: calc(var(--unit) + var(--half-unit));
+  cursor: pointer;
 }
 
 #reroll.inactive {
@@ -234,6 +236,7 @@ body {
   text-align: center;
   padding: var(--half-unit);
   margin: 0 var(--half-unit);
+  cursor: pointer;
 }
 
 #scoreboard table {
@@ -244,6 +247,7 @@ body {
 
 #scoreboard tr {
   height: calc(var(--unit) + var(--half-unit));
+  cursor: default;
 }
 
 #scoreboard tr:first-child {
@@ -276,6 +280,7 @@ body {
   background-color: white;
   min-width: var(--two-unit);
   text-align: center;
+  cursor: pointer;
 }
 
 #scoreboard td.zero {
@@ -295,7 +300,8 @@ body {
 #scoreboard td.done {
   box-shadow: none;
   background-color: transparent;
-  color: rgba(0, 0, 0, .4)
+  color: rgba(0, 0, 0, .4);
+  cursor: default;
 }
 
 #scoreboard td.ok.done {

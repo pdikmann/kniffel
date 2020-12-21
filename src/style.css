@@ -112,8 +112,8 @@ body {
 }
 
 .dice-inside {
-  width: calc(var(--two-unit) - var(--quarter-unit));
-  height: calc(var(--two-unit) - var(--quarter-unit));
+  width: calc(var(--two-unit) - var(--unit-8th));
+  height: calc(var(--two-unit) - var(--unit-8th));
   border-radius: var(--half-unit);
   background-color: white;
   display: flex;

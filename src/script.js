@@ -129,11 +129,14 @@ ui.reroll = () => {
     ui.reset()
     return
   }
-  advanceTurn(state)
-  rollAll(state)
   state.rolling = true
   render(state)
   state.rolling = false
+  setTimeout(() => {
+    rollAll(state)
+    advanceTurn(state)
+    render(state)
+  }, animationDuration)
 }
 
 ui.keep = (n) => {

@@ -54,8 +54,6 @@ function render(state) {
       addClass(dices[d], "keep")
     } else if (state.rolling) {
       addClass(dices[d], "animate")
-      let dto = d
-      setTimeout(() => removeClass(dices[dto], "animate"), animationDuration)
     }
   }
   for (var pi = 0; pi < state.playerCount; pi++) {

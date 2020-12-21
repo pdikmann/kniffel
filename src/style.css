@@ -45,13 +45,6 @@ body {
 #wrapper {
   width: var(--full-width);
   padding-bottom: var(--unit);
-  background-image: url(../gfx/lock2.png), url(../gfx/0.png),
-    url(../gfx/1.png), url(../gfx/2.png),
-    url(../gfx/3.png), url(../gfx/4.png),
-    url(../gfx/5.png), url(../gfx/6.png);
-  background-position: -10000px;
-  background-size: 0%;
-  background-repeat: no-repeat;
 }
 
 #bottom-wrapper {

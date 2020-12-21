@@ -5,7 +5,7 @@
 // turn state machine: roll0, [roll1, roll2], selectSlot
 // create table, store score td for each match
 // on render check matches for current dice and current player
-let animationDuration = 175
+let animationDuration = 450
 window.onload = () => {
   let fullheight = window.innerHeight,
     fullwidth = Math.min(window.innerWidth, 375),
@@ -15,6 +15,15 @@ window.onload = () => {
     bottomWrapperHeight = Math.min(fullheight - topContentHeight, tableContentHeight)
   document.documentElement.style.setProperty('--bottom-wrapper-height', `${bottomWrapperHeight}px`)
   document.documentElement.style.setProperty('--animation-duration', `${animationDuration}ms`)
+  let originalDice = document.getElementsByClassName('dice')[0]
+  for (var i = 1; i < 5; i++) {
+    let cloneDice = originalDice.cloneNode(true),
+      n = i
+    cloneDice.addEventListener('click', () => ui.keep(n))
+    document.getElementById('dices').appendChild(cloneDice)
+  }
+  originalDice.addEventListener('click', () => ui.keep(0))
+
   runAllTests()
   getDOM(dom)
   makeTable2(dom.scoreboard)

@@ -126,68 +126,105 @@ body {
 
 .dice {
   position: relative;
-  display: inline-block;
-  /* border: 1px solid black; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-width: var(--two-unit);
   min-height: var(--two-unit);
-  /* background-color: white; */
   text-align: center;
   line-height: var(--two-unit);
-  background-image: url(../gfx/0.png);
   background-size: contain;
+  border-radius: var(--quarter-unit);
+  background-color: #d8d8d8;
+  box-shadow: var(--clickable-shadow);
 }
 
-
-.dice.d1 {
-  background-image: url(../gfx/1.png);
+.dice.blank .pip-row {
+  display: none;
 }
 
-.dice.d2 {
-  background-image: url(../gfx/2.png);
+.dice-inside {
+  width: calc(var(--two-unit) - var(--quarter-unit));
+  height: calc(var(--two-unit) - var(--quarter-unit));
+  border-radius: var(--half-unit);
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.dice.d3 {
-  background-image: url(../gfx/3.png);
+.dice .pip-row {
+  display: flex;
+  justify-content: space-between;
 }
 
-.dice.d4 {
-  background-image: url(../gfx/4.png);
+.dice .pip {
+  background-color: var(--negative-color);
+  width: calc(2.5 * var(--unit-8th));
+  height: calc(2.5 * var(--unit-8th));
+  border-radius: var(--quarter-unit);
+  margin: 0 var(--quarter-unit);
 }
 
-.dice.d5 {
-  background-image: url(../gfx/5.png);
+.top-pips .pip {
+  margin-top: var(--quarter-unit);
 }
 
-.dice.d6 {
-  background-image: url(../gfx/6.png);
+.bottom-pips .pip {
+  margin-bottom: var(--quarter-unit);
+}
+
+.dice.d1 .top-pips, .dice.d1 .bottom-pips, .dice.d1 .middle-pips .pip:first-child {
+  display: none;
+}
+
+.dice.d1 .dice-inside, .dice.d1 .middle-pips {
+  justify-content: center;
+}
+
+.dice.d2 .middle-pips, .dice.d2 .bottom-pips .pip:first-child, .dice.d2 .top-pips .pip:first-child {
+  display: none;
+}
+
+.dice.d2 .top-pips {
+  justify-content: flex-start;
+}
+
+.dice.d2 .bottom-pips {
+  justify-content: flex-end;
+}
+
+.dice.d3 .middle-pips .pip:first-child, .dice.d3 .bottom-pips .pip:first-child, .dice.d3 .top-pips .pip:first-child {
+  display: none;
+}
+
+.dice.d3 .top-pips {
+  justify-content: flex-start;
+}
+
+.dice.d3 .middle-pips {
+  justify-content: center;
+}
+
+.dice.d3 .bottom-pips {
+  justify-content: flex-end;
+}
+
+.dice.d4 .middle-pips {
+  display: none;
+}
+
+.dice.d5 .middle-pips .pip:first-child {
+  display: none;
+}
+
+.dice.d5 .middle-pips {
+  justify-content: center;
 }
 
 .dice.keep {
-  background-blend-mode: normal, normal;
-}
-
-.dice.d1.keep {
-  background-image: var(--lock-image), url(../gfx/1.png);
-}
-
-.dice.d2.keep {
-  background-image: var(--lock-image), url(../gfx/2.png);
-}
-
-.dice.d3.keep {
-  background-image: var(--lock-image), url(../gfx/3.png);
-}
-
-.dice.d4.keep {
-  background-image: var(--lock-image), url(../gfx/4.png);
-}
-
-.dice.d5.keep {
-  background-image: var(--lock-image), url(../gfx/5.png);
-}
-
-.dice.d6.keep {
-  background-image: var(--lock-image), url(../gfx/6.png);
+  /* transform: translateY(var(--half-unit)) rotateZ(-15deg); */
+  transform: rotateZ(-15deg);
 }
 
 .dice.animate {
@@ -196,6 +233,8 @@ body {
   animation-timing-function: ease-out;
   /* transform-origin: center bottom; */
   /* background-image: url(../gfx/0.png); */
+.dice.animate .dice-inside .pip-row {
+  display: none;
 }
 
 #reroll {

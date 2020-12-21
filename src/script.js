@@ -10,7 +10,11 @@ window.onload = () => {
   let fullheight = window.innerHeight,
     fullwidth = Math.min(window.innerWidth, 375),
     unit = Math.min(fullheight, fullwidth) / 13,
-    tableContentHeight = unit * 29.625,
+    tableMargin = 2 * (unit / 2),
+    trMargin = unit / 8,
+    rowHead = unit,
+    rowHeight = unit * 1.5,
+    tableContentHeight = tableMargin + rowHead + 17 * (rowHeight + trMargin), //unit * 29.625,
     topContentHeight = unit * 4.5,
     bottomWrapperHeight = Math.min(fullheight - topContentHeight, tableContentHeight)
   document.documentElement.style.setProperty('--bottom-wrapper-height', `${bottomWrapperHeight}px`)

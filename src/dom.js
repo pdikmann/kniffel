@@ -45,13 +45,15 @@ function render(state) {
   for (var d = 0; d < dices.length; ++d) {
     // dices[d].textContent = state.dice[d].value
     dices[d].className = "dice"
-    if (state.turnState != TurnState.FirstRoll) addClass(dices[d], `d${state.dice[d].value}`)
+    if (state.turnState == TurnState.FirstRoll) {
+      addClass(dices[d], `blank`)
+    } else {
+      addClass(dices[d], `d${state.dice[d].value}`)
+    }
     if (state.dice[d].keep) {
       addClass(dices[d], "keep")
     } else if (state.rolling) {
       addClass(dices[d], "animate")
-      let dto = d
-      setTimeout(() => removeClass(dices[dto], "animate"), animationDuration)
     }
   }
   for (var pi = 0; pi < state.playerCount; pi++) {

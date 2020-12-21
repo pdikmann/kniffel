@@ -8,7 +8,7 @@
   }
 
   #wrapper {
-    margin-left: calc((100vmin - var(--full-width))/2);
+    margin-left: calc((100vw - var(--full-width))/2);
   }
 }
 
@@ -45,18 +45,10 @@ body {
 #wrapper {
   width: var(--full-width);
   padding-bottom: var(--unit);
-  background-image: url(../gfx/lock2.png), url(../gfx/0.png),
-    url(../gfx/1.png), url(../gfx/2.png),
-    url(../gfx/3.png), url(../gfx/4.png),
-    url(../gfx/5.png), url(../gfx/6.png);
-  background-position: -10000px;
-  background-size: 0%;
-  background-repeat: no-repeat;
 }
 
 #bottom-wrapper {
   width: var(--full-width);
-  height: 10px;
   height: var(--bottom-wrapper-height, 100vh);
   overflow: scroll;
 }
@@ -71,131 +63,141 @@ body {
   position: relative;
 }
 
-@keyframes dicehop {
-  0% {
-    animation-timing-function: cubic-bezier(0, .5, .5, 1);
-    top: 0px;
-    transform: none;
-  }
 
-  70% {
-    animation-timing-function: cubic-bezier(.5, 0, 1, .5);
-    transform: translateY(calc(-1 * var(--unit))) rotateZ(90deg);
-  }
-
-  100% {
-    transform: translateY(0px) rotateZ(180deg);
-  }
-}
-
-@keyframes bounce {
+@keyframes shakeY2 {
 
   from,
-  20%,
-  53%,
   to {
-    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
     transform: translate3d(0, 0, 0);
   }
 
-  40%,
-  43% {
-    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
-    transform: translate3d(0, -30px, 0) scaleY(1.1);
-  }
-
-  70% {
-    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
-    transform: translate3d(0, -15px, 0) scaleY(1.05);
-  }
-
-  80% {
-    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-    transform: translate3d(0, 0, 0) scaleY(0.95);
-  }
-
+  10%,
+  30%,
+  50%,
+  70%,
   90% {
-    transform: translate3d(0, -4px, 0) scaleY(1.02);
+    transform: translate3d(0, calc(-2 * var(--quarter-unit)), 0);
   }
-}
 
-.bounce {
-  animation-name: bounce;
-  transform-origin: center bottom;
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translate3d(0, var(--quarter-unit), 0);
+  }
 }
 
 .dice {
   position: relative;
-  display: inline-block;
-  /* border: 1px solid black; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-width: var(--two-unit);
   min-height: var(--two-unit);
-  /* background-color: white; */
   text-align: center;
   line-height: var(--two-unit);
-  background-image: url(../gfx/0.png);
   background-size: contain;
+  border-radius: var(--quarter-unit);
+  background-color: #d8d8d8;
+  box-shadow: var(--clickable-shadow);
+  cursor: pointer;
 }
 
-
-.dice.d1 {
-  background-image: url(../gfx/1.png);
+.dice.blank .pip-row {
+  display: none;
 }
 
-.dice.d2 {
-  background-image: url(../gfx/2.png);
+.dice-inside {
+  width: calc(var(--two-unit) - var(--quarter-unit));
+  height: calc(var(--two-unit) - var(--quarter-unit));
+  border-radius: var(--half-unit);
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.dice.d3 {
-  background-image: url(../gfx/3.png);
+.dice .pip-row {
+  display: flex;
+  justify-content: space-between;
 }
 
-.dice.d4 {
-  background-image: url(../gfx/4.png);
+.dice .pip {
+  background-color: var(--negative-color);
+  width: calc(2.5 * var(--unit-8th));
+  height: calc(2.5 * var(--unit-8th));
+  border-radius: var(--quarter-unit);
+  margin: 0 var(--quarter-unit);
 }
 
-.dice.d5 {
-  background-image: url(../gfx/5.png);
+.top-pips .pip {
+  margin-top: var(--quarter-unit);
 }
 
-.dice.d6 {
-  background-image: url(../gfx/6.png);
+.bottom-pips .pip {
+  margin-bottom: var(--quarter-unit);
+}
+
+.dice.d1 .top-pips, .dice.d1 .bottom-pips, .dice.d1 .middle-pips .pip:first-child {
+  display: none;
+}
+
+.dice.d1 .dice-inside, .dice.d1 .middle-pips {
+  justify-content: center;
+}
+
+.dice.d2 .middle-pips, .dice.d2 .bottom-pips .pip:first-child, .dice.d2 .top-pips .pip:first-child {
+  display: none;
+}
+
+.dice.d2 .top-pips {
+  justify-content: flex-start;
+}
+
+.dice.d2 .bottom-pips {
+  justify-content: flex-end;
+}
+
+.dice.d3 .middle-pips .pip:first-child, .dice.d3 .bottom-pips .pip:first-child, .dice.d3 .top-pips .pip:first-child {
+  display: none;
+}
+
+.dice.d3 .top-pips {
+  justify-content: flex-start;
+}
+
+.dice.d3 .middle-pips {
+  justify-content: center;
+}
+
+.dice.d3 .bottom-pips {
+  justify-content: flex-end;
+}
+
+.dice.d4 .middle-pips {
+  display: none;
+}
+
+.dice.d5 .middle-pips .pip:first-child {
+  display: none;
+}
+
+.dice.d5 .middle-pips {
+  justify-content: center;
 }
 
 .dice.keep {
-  background-blend-mode: normal, normal;
-}
-
-.dice.d1.keep {
-  background-image: var(--lock-image), url(../gfx/1.png);
-}
-
-.dice.d2.keep {
-  background-image: var(--lock-image), url(../gfx/2.png);
-}
-
-.dice.d3.keep {
-  background-image: var(--lock-image), url(../gfx/3.png);
-}
-
-.dice.d4.keep {
-  background-image: var(--lock-image), url(../gfx/4.png);
-}
-
-.dice.d5.keep {
-  background-image: var(--lock-image), url(../gfx/5.png);
-}
-
-.dice.d6.keep {
-  background-image: var(--lock-image), url(../gfx/6.png);
+  transform: rotateZ(-15deg);
 }
 
 .dice.animate {
-  animation-name: dicehop;
+  animation-name: shakeY2;
   animation-duration: var(--animation-duration, 5000ms);
-  animation-timing-function: ease-out;
-  /* transform-origin: center bottom; */
-  /* background-image: url(../gfx/0.png); */
+  animation-timing-function: linear;
+}
+
+.dice.animate .dice-inside .pip-row {
+  display: none;
 }
 
 #reroll {
@@ -209,6 +211,7 @@ body {
   color: white;
   text-align: center;
   line-height: calc(var(--unit) + var(--half-unit));
+  cursor: pointer;
 }
 
 #reroll.inactive {
@@ -233,6 +236,7 @@ body {
   text-align: center;
   padding: var(--half-unit);
   margin: 0 var(--half-unit);
+  cursor: pointer;
 }
 
 #scoreboard table {
@@ -243,6 +247,7 @@ body {
 
 #scoreboard tr {
   height: calc(var(--unit) + var(--half-unit));
+  cursor: default;
 }
 
 #scoreboard tr:first-child {
@@ -275,6 +280,7 @@ body {
   background-color: white;
   min-width: var(--two-unit);
   text-align: center;
+  cursor: pointer;
 }
 
 #scoreboard td.zero {
@@ -294,14 +300,18 @@ body {
 #scoreboard td.done {
   box-shadow: none;
   background-color: transparent;
-  color: rgba(0, 0, 0, .4)
+  color: rgba(0, 0, 0, .4);
+  cursor: default;
 }
 
 #scoreboard td.ok.done {
-  /* color: black; */
 }
 
 #scoreboard td.zero.done {
-  /* color: rgba(0, 0, 0, .25); */
-  /* color: rgba(0,0,0,.4) */
+}
+
+@media only screen and (min-height: 900px) {
+  #bottom-wrapper {
+    overflow: auto;
+  }
 }

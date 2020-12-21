@@ -23,23 +23,23 @@ let matches = [{
     fn: oneOrMoreOf(6)
   },
   {
-    label: "Dreier-\nPasch",
+    label: "Dreier-Pasch",
     fn: multiMatch([0, 0, 0], sumScore())
   },
   {
-    label: "Vierer-\nPasch",
+    label: "Vierer-Pasch",
     fn: multiMatch([0, 0, 0, 0], sumScore())
   },
   {
-    label: "Full\nHouse",
+    label: "Full House",
     fn: fullHouseMatch(() => 25)
   },
   {
-    label: "Kleine\nStraße",
+    label: "Kleine Straße",
     fn: multiMatch([0, 1, 2, 3], () => 30)
   },
   {
-    label: "Große\nStraße",
+    label: "Große Straße",
     fn: multiMatch([0, 1, 2, 3, 4], () => 40)
   },
   {

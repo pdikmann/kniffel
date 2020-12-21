@@ -5,16 +5,29 @@
 // turn state machine: roll0, [roll1, roll2], selectSlot
 // create table, store score td for each match
 // on render check matches for current dice and current player
-let animationDuration = 175
+let animationDuration = 450
 window.onload = () => {
   let fullheight = window.innerHeight,
     fullwidth = Math.min(window.innerWidth, 375),
     unit = Math.min(fullheight, fullwidth) / 13,
-    tableContentHeight = unit * 29.625,
+    tableMargin = 2 * (unit / 2),
+    trMargin = unit / 8,
+    rowHead = unit,
+    rowHeight = unit * 1.5,
+    tableContentHeight = tableMargin + rowHead + 17 * (rowHeight + trMargin), //unit * 29.625,
     topContentHeight = unit * 4.5,
     bottomWrapperHeight = Math.min(fullheight - topContentHeight, tableContentHeight)
   document.documentElement.style.setProperty('--bottom-wrapper-height', `${bottomWrapperHeight}px`)
   document.documentElement.style.setProperty('--animation-duration', `${animationDuration}ms`)
+  let originalDice = document.getElementsByClassName('dice')[0]
+  for (var i = 1; i < 5; i++) {
+    let cloneDice = originalDice.cloneNode(true),
+      n = i
+    cloneDice.addEventListener('click', () => ui.keep(n))
+    document.getElementById('dices').appendChild(cloneDice)
+  }
+  originalDice.addEventListener('click', () => ui.keep(0))
+
   runAllTests()
   getDOM(dom)
   makeTable2(dom.scoreboard)
@@ -116,11 +129,14 @@ ui.reroll = () => {
     ui.reset()
     return
   }
-  advanceTurn(state)
-  rollAll(state)
   state.rolling = true
   render(state)
   state.rolling = false
+  setTimeout(() => {
+    rollAll(state)
+    advanceTurn(state)
+    render(state)
+  }, animationDuration)
 }
 
 ui.keep = (n) => {

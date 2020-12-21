@@ -4,17 +4,28 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="src/style.css">
 </head>
 
 <body>
 	<div id="wrapper">
 		<div id="dices">
-			<div class="dice" onclick="ui.keep(0)"></div>
-			<div class="dice" onclick="ui.keep(1)"></div>
-			<div class="dice" onclick="ui.keep(2)"></div>
-			<div class="dice" onclick="ui.keep(3)"></div>
-			<div class="dice" onclick="ui.keep(4)"></div>
+			<div class="dice">
+				<div class="dice-inside">
+					<div class="pip-row top-pips">
+						<div class="pip"></div>
+						<div class="pip"></div>
+					</div>
+					<div class="pip-row middle-pips">
+						<div class="pip"></div>
+						<div class="pip"></div>
+					</div>
+					<div class="pip-row bottom-pips">
+						<div class="pip"></div>
+						<div class="pip"></div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<div id="reroll" onclick="ui.reroll()">
 			Würfeln
@@ -28,9 +39,9 @@
 			<div id="more-players" onclick="ui.morePlayers()">Mehr Spieler</div>
 		</div>
 	</div>
-	<script src="matches.js"></script>
-	<script src="dom.js"></script>
-	<script src="script.js"></script>
+	<script src="src/matches.js"></script>
+	<script src="src/dom.js"></script>
+	<script src="src/script.js"></script>
 </body>
 
 </html>

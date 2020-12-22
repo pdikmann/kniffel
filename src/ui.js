@@ -1,12 +1,11 @@
 let ui = {}
 
 ui.reroll = () => {
-  if (online.connected &&
-    online.isHost &&
-    online.onlineState == onlineState.WaitingForPlayers) {
+  if (hostIsWaitingForPlayersToJoin()) {
     startOnlineGame()
     return
   }
+  if (guestIsWaitingForHostToStart()) return
   if (state.rolling) return
   if (state.turnState == TurnState.MatchSelect) return
   if (state.gameOver) {

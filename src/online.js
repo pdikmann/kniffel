@@ -15,6 +15,23 @@ let online = {
   // canJoin: true,
 }
 
+function itsNotMyTurn() {
+  return online.connected &&
+    state.currentPlayer != online.localPlayer
+}
+
+function hostIsWaitingForPlayersToJoin() {
+  return online.connected &&
+    online.isHost &&
+    online.onlineState == onlineState.WaitingForPlayers
+}
+
+function guestIsWaitingForHostToStart() {
+  return online.connected &&
+    !online.isHost &&
+    online.onlineState == onlineState.WaitingForPlayers
+}
+
 function startOnlineGame() {
   stopInterval()
   online.onlineState = onlineState.Playing

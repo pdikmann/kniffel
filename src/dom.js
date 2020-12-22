@@ -45,14 +45,15 @@ function render(state) {
     dom.rollButton.textContent = "Neues Spiel"
     dom.rollButton.className = "new-game"
   }
-  if (online.connected && online.isHost && online.onlineState == onlineState.WaitingForPlayers) {
-    dom.rollButton.textContent = "Warte auf Spieler ... Spiel starten"
+  if (hostIsWaitingForPlayersToJoin()) {
+    dom.rollButton.textContent = "Spiel starten"
     dom.rollButton.className = "new-game"
   }
-  if (online.connected && !online.isHost && online.onlineState == onlineState.WaitingForPlayers) {
-    dom.rollButton.textContent = "Spiel beigetreten. Warte auf Spielstart von Host."
+  if (guestIsWaitingForHostToStart()) {
+    dom.rollButton.textContent = "Spiel beigetreten. Warte auf Spielstart."
     dom.rollButton.className = "inactive"
   }
+  if (itsNotMyTurn()) dom.rollButton.className = "inactive"
   let dices = dom.dices;
   for (var d = 0; d < dices.length; ++d) {
     // dices[d].textContent = state.dice[d].value

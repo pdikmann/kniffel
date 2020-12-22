@@ -44,7 +44,13 @@ function guestIsWaitingForHostToStart() {
     online.onlineState == onlineState.WaitingForPlayers
 }
 
-function pushStateToServer(){
+function isGuest() {
+  return online.connected &&
+    !online.isHost
+}
+
+function pushStateToServer() {
+  if (!online.connected) return;
   pushRequest(state, (res) => console.log("Push State ok"))
 }
 

@@ -42,8 +42,8 @@ function render(state) {
       break;
   }
   if (state.gameOver) {
-    dom.rollButton.textContent = "Neues Spiel"
-    dom.rollButton.className = "new-game"
+    dom.rollButton.textContent = isGuest() ? "Warte auf Spielstart" : "Neues Spiel"
+    dom.rollButton.className = isGuest() ? "inactive" : "new-game"
   }
   if (hostIsWaitingForPlayersToJoin()) {
     dom.rollButton.textContent = "Spiel starten"

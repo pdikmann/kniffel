@@ -7,6 +7,17 @@
 // on render check matches for current dice and current player
 let animationDuration = 450
 window.onload = () => {
+  runAllTests()
+  testFilePut()
+  setCssVariables()
+  cloneDice()
+  getDOM(dom)
+  makeTable2(dom.scoreboard)
+  render(state)
+  removeClass(document.getElementById('wrapper'), 'hidden')
+}
+
+function setCssVariables() {
   let fullheight = window.innerHeight,
     fullwidth = Math.min(window.innerWidth, 375),
     unit = Math.min(fullheight, fullwidth) / 13,
@@ -19,6 +30,9 @@ window.onload = () => {
     bottomWrapperHeight = Math.min(fullheight - topContentHeight, tableContentHeight)
   document.documentElement.style.setProperty('--bottom-wrapper-height', `${bottomWrapperHeight}px`)
   document.documentElement.style.setProperty('--animation-duration', `${animationDuration}ms`)
+}
+
+function cloneDice() {
   let originalDice = document.getElementsByClassName('dice')[0]
   for (var i = 1; i < 5; i++) {
     let cloneDice = originalDice.cloneNode(true),
@@ -27,12 +41,6 @@ window.onload = () => {
     document.getElementById('dices').appendChild(cloneDice)
   }
   originalDice.addEventListener('click', () => ui.keep(0))
-
-  runAllTests()
-  getDOM(dom)
-  makeTable2(dom.scoreboard)
-  render(state)
-  removeClass(document.getElementById('wrapper'), 'hidden')
 }
 
 //  ███████ ████████  █████  ████████ ███████ 
@@ -47,6 +55,12 @@ let TurnState = {
   ThirdRoll: 2,
   MatchSelect: 3,
   MAX: 3
+}
+
+let online = {
+  sessionName: "",
+  connected: false,
+  localPlayer: 0,
 }
 
 let state = freshState(1)
@@ -188,7 +202,7 @@ ui.morePlayers = () => {
 
 ui.lessPlayers = () => {
   if (state.rolling) return
-  state.playerCount = Math.max(1, state.playerCount - 1)
+  state.playerCount = Math.max(0, state.playerCount - 1)
   ui.reset()
 }
 

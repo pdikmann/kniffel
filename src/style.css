@@ -67,7 +67,6 @@ body {
   position: relative;
 }
 
-
 @keyframes shakeY2 {
 
   from,
@@ -230,16 +229,26 @@ body {
 .config {
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
+}
+/*
+.config > * {
+  margin-bottom: var(--half-unit);
+} */
+
+.config .row {
+  display: flex;
+  justify-content: space-between;
 }
 
-.config div {
+.config .button {
   border-radius: var(--quarter-unit);
   box-shadow: var(--clickable-shadow);
   background-color: var(--interactive-color);
   color: white;
   text-align: center;
   padding: var(--half-unit);
-  margin: 0 var(--half-unit);
+  margin: 0 var(--half-unit) var(--half-unit);
   cursor: pointer;
 }
 
@@ -308,11 +317,9 @@ body {
   cursor: default;
 }
 
-#scoreboard td.ok.done {
-}
+#scoreboard td.ok.done {}
 
-#scoreboard td.zero.done {
-}
+#scoreboard td.zero.done {}
 
 @media only screen and (min-height: 900px) {
   #bottom-wrapper {

@@ -135,6 +135,7 @@ function diceValues(state) {
 
 function softReset() {
   state = freshPlayerVars(state, state.playerCount)
+  state.gameOver = false
 }
 
 

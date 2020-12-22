@@ -19,6 +19,7 @@ function getDOM(dom) {
   dom.dices = document.getElementsByClassName('dice')
   dom.rollButton = document.getElementById('reroll')
   dom.scoreboard = document.getElementById('scoreboard')
+  dom.bottomWrapper = document.getElementById('bottom-wrapper')
 }
 
 function render(state) {
@@ -40,6 +41,14 @@ function render(state) {
   if (state.gameOver) {
     dom.rollButton.textContent = "Neues Spiel"
     dom.rollButton.className = "new-game"
+  }
+  if (online.connected && online.isHost && online.onlineState == onlineState.WaitingForPlayers) {
+    dom.rollButton.textContent = "Warte auf Spieler ... Spiel starten"
+    dom.rollButton.className = "new-game"
+  }
+  if (online.connected && !online.isHost && online.onlineState == onlineState.WaitingForPlayers) {
+    dom.rollButton.textContent = "Spiel beigetreten. Warte auf Spielstart von Host."
+    dom.rollButton.className = "inactive"
   }
   let dices = dom.dices;
   for (var d = 0; d < dices.length; ++d) {
@@ -68,11 +77,14 @@ function render(state) {
       } else {
         addClass(match, "ok")
       }
-      if (dom.matches[pi][m].done) {
+      if (state.score[pi][m] != undefined) {
+        // (dom.matches[pi][m].done) {
         addClass(match, "done")
       }
       match.textContent = (score > 0) ? score : "—"
-      if ((state.currentPlayer != pi || state.turnState == TurnState.FirstRoll) && !dom.matches[pi][m].done) {
+      if ((state.currentPlayer != pi || state.turnState == TurnState.FirstRoll) &&
+        //!dom.matches[pi][m].done) {
+        state.score[pi][m] == undefined) {
         match.textContent = ""
         match.className = "match"
       }

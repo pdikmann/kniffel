@@ -23,19 +23,22 @@ function getDOM(dom) {
 }
 
 function render(state) {
+  if (online.connected && online.isHost && online.onlineState == onlineState.Playing) {
+    pushRequest(state, (res) => console.log("Push State ok"))
+  }
   dom.rollButton.className = (state.turnState == TurnState.MatchSelect) ? "inactive" : ""
   switch (state.turnState) {
     case TurnState.FirstRoll:
-      dom.rollButton.textContent = "Wurf 1"
+      dom.rollButton.textContent = `Spieler ${state.currentPlayer} - Wurf 1` //"Wurf 1"
       break;
     case TurnState.SecondRoll:
-      dom.rollButton.textContent = "Wurf 2"
+      dom.rollButton.textContent = `Spieler ${state.currentPlayer} - Wurf 2`
       break;
     case TurnState.ThirdRoll:
-      dom.rollButton.textContent = "Wurf 3"
+      dom.rollButton.textContent = `Spieler ${state.currentPlayer} - Wurf 3`
       break;
     case TurnState.MatchSelect:
-      dom.rollButton.textContent = "Kategorie wählen"
+      dom.rollButton.textContent = `Spieler ${state.currentPlayer} - Auswahl` //"Kategorie wählen"
       break;
   }
   if (state.gameOver) {

@@ -15,10 +15,12 @@ let online = {
   // canJoin: true,
 }
 
-function startOnlineGame(){
+function startOnlineGame() {
+  stopInterval()
   online.onlineState = onlineState.Playing
   state.joinable = false
-  stopInterval()
+  // pushRequest(state, (res) => console.log("Push State ok"))
+  render(state)
 }
 
 function stopInterval() {
@@ -44,6 +46,10 @@ function waitForHost() {
         state = res
         domReset()
         render(state)
+      } else if (!res.joinable) {
+        state = res
+        online.onlineState = onlineState.Playing
+        render(state)
       } else {
         state = res
         render(state)
@@ -63,7 +69,7 @@ function joinSession() {
       }
       state = res
       state.playerCount += 1
-      state = updatePlayerVars(state, state.playerCount)
+      state = freshPlayerVars(state, state.playerCount)
       pushRequest(state, res => {
         console.log("Join push state ok")
       })

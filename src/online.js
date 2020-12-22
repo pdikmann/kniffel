@@ -72,6 +72,7 @@ function waitForPlayers() {
 }
 
 function waitForMyTurn() {
+  if (!online.connected) return;
   console.log("Waiting for my Turn")
   online.requestInterval = setInterval(() => {
     pullRequest(res => {

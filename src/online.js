@@ -56,19 +56,33 @@ function waitForPlayers() {
   }, 500)
 }
 
-function waitForHost() {
+function waitForMyTurn() {
+  console.log("Waiting for my Turn")
+  online.requestInterval = setInterval(() => {
+    pullRequest(res => {
+      state = res
+      if (itIsMyTurn()) {
+        console.log("It it My Turn")
+        stopInterval()
+      }
+      render(state)
+    })
+  }, 500)
+}
+
+function waitForHostToStart() {
   online.requestInterval = setInterval(() => {
     pullRequest(res => {
       if (res.playerCount != state.playerCount) {
         state = res
         domReset()
         render(state)
-      } else if (!res.joinable) {
+      }
+      if (!res.joinable) {
         state = res
         online.onlineState = onlineState.Playing
-        render(state)
-      } else {
-        state = res
+        stopInterval()
+        waitForMyTurn()
         render(state)
       }
     })
@@ -94,7 +108,7 @@ function joinSession() {
       dom.bottomWrapper.scrollTo(0, 0)
       domReset()
       render(state)
-      waitForHost()
+      waitForHostToStart()
     } else {
       console.log(`Fail to join - game in progress`)
     }

@@ -15,9 +15,21 @@ let online = {
   // canJoin: true,
 }
 
+function hostOrSinglePlayer() {
+  return (online.connected && online.isHost) ||
+    !online.connected
+}
+
 function itsNotMyTurn() {
   return online.connected &&
+    online.onlineState == onlineState.Playing &&
     state.currentPlayer != online.localPlayer
+}
+
+function itIsMyTurn() {
+  return online.connected &&
+    online.onlineState == onlineState.Playing &&
+    state.currentPlayer == online.localPlayer
 }
 
 function hostIsWaitingForPlayersToJoin() {
@@ -32,11 +44,14 @@ function guestIsWaitingForHostToStart() {
     online.onlineState == onlineState.WaitingForPlayers
 }
 
+function pushStateToServer(){
+  pushRequest(state, (res) => console.log("Push State ok"))
+}
+
 function startOnlineGame() {
   stopInterval()
   online.onlineState = onlineState.Playing
   state.joinable = false
-  // pushRequest(state, (res) => console.log("Push State ok"))
   render(state)
 }
 

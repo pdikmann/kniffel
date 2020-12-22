@@ -23,8 +23,8 @@ function getDOM(dom) {
 }
 
 function render(state) {
-  if (online.connected && online.isHost && online.onlineState == onlineState.Playing) {
-    pushRequest(state, (res) => console.log("Push State ok"))
+  if (itIsMyTurn()) {
+    pushStateToServer()
   }
   dom.rollButton.className = (state.turnState == TurnState.MatchSelect) ? "inactive" : ""
   switch (state.turnState) {

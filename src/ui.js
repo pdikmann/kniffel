@@ -6,6 +6,7 @@ ui.reroll = () => {
     return
   }
   if (guestIsWaitingForHostToStart()) return
+  if (itsNotMyTurn()) return
   if (state.rolling) return
   if (state.turnState == TurnState.MatchSelect) return
   if (state.gameOver) {
@@ -24,6 +25,7 @@ ui.reroll = () => {
 }
 
 ui.keep = (n) => {
+  if (itsNotMyTurn()) return
   if (state.rolling) return
   if (state.turnState == TurnState.FirstRoll) return;
   state.dice[n].keep = !state.dice[n].keep
@@ -31,6 +33,7 @@ ui.keep = (n) => {
 }
 
 ui.selectMatch = (n, pi) => {
+  if (itsNotMyTurn()) return
   if (state.rolling) return
   if (state.turnState == TurnState.FirstRoll) return
   if (state.currentPlayer != pi) return
@@ -50,15 +53,19 @@ ui.selectMatch = (n, pi) => {
   unkeep(state)
   nextTurn(state)
   render(state)
+  pushStateToServer() // render won't push because it's not our turn anymore
+  waitForMyTurn()
 }
 
 ui.reset = () => {
+  if (!hostOrSinglePlayer()) return
   if (state.rolling) return
   softReset()
   render(state)
 }
 
 ui.morePlayers = () => {
+  if (online.connected) return
   if (state.rolling) return
   state.playerCount += 1
   hardReset()
@@ -66,6 +73,7 @@ ui.morePlayers = () => {
 }
 
 ui.lessPlayers = () => {
+  if (online.connected) return
   if (state.rolling) return
   state.playerCount = Math.max(0, state.playerCount - 1)
   hardReset()

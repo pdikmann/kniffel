@@ -15,7 +15,11 @@ let online = {
   // canJoin: true,
 }
 
-function offline(){
+function isOnline() {
+  return online.connected
+}
+
+function isOffline(){
   return !online.connected
 }
 

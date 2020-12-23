@@ -62,6 +62,7 @@ ui.reset = () => {
   if (state.rolling) return
   softReset()
   scrollToTop()
+  setCssVariables()
   render(state)
 }
 

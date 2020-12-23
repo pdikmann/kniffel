@@ -8,7 +8,6 @@
 let animationDuration = 450
 window.onload = () => {
   runAllTests()
-  // testFilePut()
   setCssVariables()
   cloneDice()
   getDOM(dom)
@@ -134,7 +133,9 @@ function diceValues(state) {
 }
 
 function softReset() {
-  let tempState = {...state}
+  let tempState = {
+    ...state
+  }
   state = freshState(state.playerCount)
   state.joinable = tempState.joinable
 }

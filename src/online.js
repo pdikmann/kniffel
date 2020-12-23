@@ -171,12 +171,6 @@ function hostSession() {
   })
 }
 
-function testFilePut() {
-  pushRequest({
-    foo: 123
-  }, () => console.log("Success in testing put"))
-}
-
 function pullRequest(successfn) {
   makeRequest(false, null, successfn, genericFailCatch)
 }

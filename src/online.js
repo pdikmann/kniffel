@@ -204,8 +204,8 @@ function makeRequest(pushOrPull, payload, successfn, failfn) {
       successfn(res)
     }
   }
-  if (pushOrPull) xmlhttp.open("POST", "src/server/push.php", true)
-  else xmlhttp.open("GET", "src/server/pull.php", true)
+  if (pushOrPull) xmlhttp.open("POST", `src/server/push.php?session=${dom.config.session.value}`, true)
+  else xmlhttp.open("GET", `src/server/pull.php?session=${dom.config.session.value}`, true)
   xmlhttp.setRequestHeader('Content-type', 'application/json')
   if (pushOrPull) xmlhttp.send(JSON.stringify(payload))
   else xmlhttp.send()

@@ -21,6 +21,7 @@
   --three-unit: calc(var(--unit) * 3);
   --felt-color: #77a07d;
   --interactive-color: #57a9c3;
+  --inactive-color: #999999;
   --negative-color: #ff5757;
   --positive-color: #50c750;
   --clickable-shadow: var(--unit-8th) var(--unit-8th) var(--unit-8th) rgba(0, 0, 0, 0.3),
@@ -302,6 +303,10 @@ body {
   color: white;
 }
 
+#scoreboard td.inactive {
+  background-color: var(--inactive-color);
+}
+
 #scoreboard td.done {
   box-shadow: none;
   background-color: transparent;
@@ -323,7 +328,8 @@ body {
   display: none !important;
 }
 
-.inactive {
-  background-color: #999999 !important;
-  color: rgba(0, 0, 0, .4) !important;
+
+.button.inactive, #reroll.inactive {
+  background-color: var(--inactive-color);
+  color: rgba(0, 0, 0, .4);
 }

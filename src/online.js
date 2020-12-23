@@ -136,6 +136,7 @@ function joinSession() {
       online = {
         ...online,
         connected: true,
+        isHost: false,
         localPlayer: state.playerCount,
         onlineState: onlineState.WaitingForPlayers
       }

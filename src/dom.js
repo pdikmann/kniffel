@@ -27,6 +27,7 @@ function getDOM(dom) {
     host: document.getElementById('host'),
     join: document.getElementById('join'),
     leave: document.getElementById('leave'),
+    session: document.getElementById('session'),
   }
 }
 

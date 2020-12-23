@@ -245,6 +245,17 @@ body {
   cursor: pointer;
 }
 
+.config input {
+  border-radius: var(--quarter-unit);
+  box-shadow: var(--clickable-shadow);
+  background-color: white;
+  border: none;
+  padding: var(--half-unit);
+  margin: 0 var(--half-unit) var(--half-unit);
+  flex-grow: 1;
+  cursor: pointer;
+}
+
 #scoreboard table {
   border-collapse: separate;
   border-spacing: var(--half-unit) var(--unit-8th);

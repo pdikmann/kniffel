@@ -20,55 +20,23 @@ function getDOM(dom) {
   dom.rollButton = document.getElementById('reroll')
   dom.scoreboard = document.getElementById('scoreboard')
   dom.bottomWrapper = document.getElementById('bottom-wrapper')
+  dom.config = {
+    reset: document.getElementById('reset'),
+    lessPlayers: document.getElementById('less-players'),
+    morePlayers: document.getElementById('more-players'),
+    host: document.getElementById('host'),
+    join: document.getElementById('join'),
+    leave: document.getElementById('leave'),
+  }
 }
 
 function render(state) {
   if (itIsMyTurn()) {
     pushStateToServer()
   }
-  dom.rollButton.className = (state.turnState == TurnState.MatchSelect) ? "inactive" : ""
-  switch (state.turnState) {
-    case TurnState.FirstRoll:
-      dom.rollButton.textContent = `Spieler ${state.currentPlayer} - Wurf 1` //"Wurf 1"
-      break;
-    case TurnState.SecondRoll:
-      dom.rollButton.textContent = `Spieler ${state.currentPlayer} - Wurf 2`
-      break;
-    case TurnState.ThirdRoll:
-      dom.rollButton.textContent = `Spieler ${state.currentPlayer} - Wurf 3`
-      break;
-    case TurnState.MatchSelect:
-      dom.rollButton.textContent = `Spieler ${state.currentPlayer} - Auswahl` //"Kategorie wählen"
-      break;
-  }
-  if (state.gameOver) {
-    dom.rollButton.textContent = isGuest() ? "Warte auf Spielstart" : "Neues Spiel"
-    dom.rollButton.className = isGuest() ? "inactive" : "new-game"
-  }
-  if (hostIsWaitingForPlayersToJoin()) {
-    dom.rollButton.textContent = "Spiel starten"
-    dom.rollButton.className = "new-game"
-  }
-  if (guestIsWaitingForHostToStart()) {
-    dom.rollButton.textContent = "Spiel beigetreten. Warte auf Spielstart."
-    dom.rollButton.className = "inactive"
-  }
-  if (itsNotMyTurn()) dom.rollButton.className = "inactive"
+  rollButtonComponent.render(dom.rollButton, state)
   let dices = dom.dices;
-  for (var d = 0; d < dices.length; ++d) {
-    // dices[d].textContent = state.dice[d].value
-    dices[d].className = "dice"
-    if (state.turnState == TurnState.FirstRoll) {
-      addClass(dices[d], `blank`)
-    } else {
-      addClass(dices[d], `d${state.dice[d].value}`)
-    }
-    if (state.dice[d].keep) {
-      addClass(dices[d], "keep")
-    } else if (state.rolling) {
-      addClass(dices[d], "animate")
-    }
-  }
+  for (var d = 0; d < dices.length; ++d) diceComponent.render(dices[d], state, state.dice[d])
   for (var pi = 0; pi < state.playerCount; pi++) {
     dom.header[pi].className = (state.currentPlayer == pi) ? "active" : ""
     for (var m = 0; m < dom.matches[pi].length; m++) {
@@ -95,10 +63,8 @@ function render(state) {
     }
     if (state.bonusFlag[pi] > 0) {
       dom.bonus[pi].textContent = state.bonus[pi]
-      // dom.bonus[pi].className = "bonus ok done"
     } else if (state.bonusFlag[pi] < 0) {
       dom.bonus[pi].textContent = "—"
-      // dom.bonus[pi].className = "bonus zero done"
     } else {
       dom.bonus[pi].textContent = ""
     }
@@ -106,6 +72,7 @@ function render(state) {
     dom.sumBottom[pi].textContent = state.score[pi].slice(6).filter(identity).reduce(sum, 0)
     dom.sum[pi].textContent = state.score[pi].filter(identity).reduce(sum, 0) + state.bonus[pi]
   }
+  configComponent.render(dom.config, state)
 }
 
 function makeTable2(parent) {
@@ -169,4 +136,9 @@ function addClass(dom, className) {
 function removeClass(dom, className) {
   dom.className = stringRemove(dom.className, className)
   return dom
+}
+
+function scrollToTop(){
+  window.scrollTo(0, 0)
+  dom.bottomWrapper.scrollTo(0, 0)
 }

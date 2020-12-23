@@ -36,10 +36,6 @@
   font-size: calc(var(--unit) * 0.65);
 }
 
-.hidden {
-  display: none;
-}
-
 body {
   background-color: var(--felt-color);
   background-image: url(../gfx/noise.png);
@@ -217,11 +213,6 @@ body {
   cursor: pointer;
 }
 
-#reroll.inactive {
-  background-color: #999999;
-  color: rgba(0, 0, 0, .4);
-}
-
 #reroll.new-game {
   background-color: var(--negative-color);
 }
@@ -249,6 +240,7 @@ body {
   text-align: center;
   padding: var(--half-unit);
   margin: 0 var(--half-unit) var(--half-unit);
+  flex-grow: 1;
   cursor: pointer;
 }
 
@@ -325,4 +317,13 @@ body {
   #bottom-wrapper {
     overflow: auto;
   }
+}
+
+.hidden {
+  display: none !important;
+}
+
+.inactive {
+  background-color: #999999 !important;
+  color: rgba(0, 0, 0, .4) !important;
 }

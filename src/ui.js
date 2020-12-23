@@ -61,6 +61,7 @@ ui.reset = () => {
   if (!hostOrSinglePlayer()) return
   if (state.rolling) return
   softReset()
+  scrollToTop()
   render(state)
 }
 
@@ -75,7 +76,7 @@ ui.morePlayers = () => {
 ui.lessPlayers = () => {
   if (online.connected) return
   if (state.rolling) return
-  state.playerCount = Math.max(0, state.playerCount - 1)
+  state.playerCount = Math.max(1, state.playerCount - 1)
   hardReset()
   render(state)
 }
@@ -89,4 +90,8 @@ ui.host = () => {
 
 ui.join = () => {
   joinSession()
+}
+
+ui.leave = () => {
+  leaveSession()
 }

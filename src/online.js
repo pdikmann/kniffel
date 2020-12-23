@@ -15,6 +15,10 @@ let online = {
   // canJoin: true,
 }
 
+function offline(){
+  return !online.connected
+}
+
 function hostOrSinglePlayer() {
   return (online.connected && online.isHost) ||
     !online.connected
@@ -111,6 +115,15 @@ function waitForHostToStart() {
   }, 500)
 }
 
+function leaveSession() {
+  stopInterval()
+  online.connected = false
+  state.playerCount = 1
+  hardReset()
+  scrollToTop()
+  render(state)
+}
+
 function joinSession() {
   pullRequest(res => {
     if (res.joinable) {
@@ -126,8 +139,7 @@ function joinSession() {
       pushRequest(state, res => {
         console.log("Join push state ok")
       })
-      window.scrollTo(0, 0)
-      dom.bottomWrapper.scrollTo(0, 0)
+      scrollToTop()
       domReset()
       render(state)
       waitForHostToStart()
@@ -148,8 +160,7 @@ function hostSession() {
         localPlayer: 0,
         onlineState: onlineState.WaitingForPlayers
       }
-      window.scrollTo(0, 0)
-      dom.bottomWrapper.scrollTo(0, 0)
+      scrollToTop()
       render(state)
       waitForPlayers()
     }

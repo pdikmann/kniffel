@@ -134,10 +134,10 @@ function diceValues(state) {
 }
 
 function softReset() {
-  state = freshPlayerVars(state, state.playerCount)
-  state.gameOver = false
+  let tempState = {...state}
+  state = freshState(state.playerCount)
+  state.joinable = tempState.joinable
 }
-
 
 function hardReset() {
   state = freshState(state.playerCount)

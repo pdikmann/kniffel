@@ -1,7 +1,7 @@
 <?php
 $jsonString = file_get_contents("php://input");
 $stripped = basename(trim($_GET['session']));
-$myFile = "../../db/".$stripped.".json";
+$myFile = "../../session/".$stripped.".json";
 if (file_put_contents($myFile, $jsonString)) {
   echo '{ "success": true }';
 }

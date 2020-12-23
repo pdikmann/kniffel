@@ -136,7 +136,8 @@ function joinSession() {
       online = {
         ...online,
         connected: true,
-        localPlayer: state.playerCount
+        localPlayer: state.playerCount,
+        onlineState: onlineState.WaitingForPlayers
       }
       state.playerCount += 1
       state = freshPlayerVars(state, state.playerCount)

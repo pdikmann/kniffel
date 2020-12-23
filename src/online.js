@@ -19,7 +19,7 @@ function isOnline() {
   return online.connected
 }
 
-function isOffline(){
+function isOffline() {
   return !online.connected
 }
 
@@ -59,7 +59,13 @@ function isGuest() {
 
 function pushStateToServer() {
   if (!online.connected) return;
-  pushRequest(state, (res) => console.log("Push State ok"))
+  pushRequest(state, (res) => {
+    if (res.success) {
+      console.log("Push State ok")
+    } else {
+      console.log(`Push State fail, server reports error: ${res.error}`)
+    }
+  })
 }
 
 function startOnlineGame() {
@@ -92,7 +98,7 @@ function waitForMyTurn() {
     pullRequest(res => {
       state = res
       if (itIsMyTurn()) {
-        console.log("It it My Turn")
+        console.log("It is My Turn")
         stopInterval()
       }
       render(state)
@@ -169,6 +175,8 @@ function hostSession() {
       scrollToTop()
       render(state)
       waitForPlayers()
+    } else {
+      console.error(`Hosting fail, server reports error: ${res.error}`);
     }
   })
 }

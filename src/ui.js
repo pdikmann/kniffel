@@ -69,7 +69,7 @@ ui.reset = () => {
 ui.morePlayers = () => {
   if (online.connected) return
   if (state.rolling) return
-  state.playerCount += 1
+  state.playerCount = Math.min(8, state.playerCount + 1)
   hardReset()
   render(state)
 }

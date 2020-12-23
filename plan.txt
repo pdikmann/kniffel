@@ -1,0 +1,34 @@
+buttons:
+- connect to server
+
+data:
+onlineMode = {
+  connected: <bool>,
+  localPlayer: <int>,
+  sessionName: <string>
+}
+
+additional checks:
+on every ui interaction:
+  if (state.currentPlayer != onlineMode.localPlayer) { return }
+  [...]
+  if (state.currentPlayer == onlineMode.localPlayer) { post state }
+
+connect to server: async request to server
+server returns state as file
+state contains player count
+if player count > 0 then copy state from server
+start requesting every .5 sec until currentplayer == localplayer
+
+php file:
+takes get request
+
+host game:
+save state under supplied session name,
+
+join game:
+get online,
+start requesting state under supplied session name
+
+leave game:
+stop being online, new game

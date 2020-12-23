@@ -19,43 +19,25 @@ function getDOM(dom) {
   dom.dices = document.getElementsByClassName('dice')
   dom.rollButton = document.getElementById('reroll')
   dom.scoreboard = document.getElementById('scoreboard')
+  dom.bottomWrapper = document.getElementById('bottom-wrapper')
+  dom.config = {
+    reset: document.getElementById('reset'),
+    lessPlayers: document.getElementById('less-players'),
+    morePlayers: document.getElementById('more-players'),
+    host: document.getElementById('host'),
+    join: document.getElementById('join'),
+    leave: document.getElementById('leave'),
+    session: document.getElementById('session'),
+  }
 }
 
 function render(state) {
-  dom.rollButton.className = (state.turnState == TurnState.MatchSelect) ? "inactive" : ""
-  switch (state.turnState) {
-    case TurnState.FirstRoll:
-      dom.rollButton.textContent = "Wurf 1"
-      break;
-    case TurnState.SecondRoll:
-      dom.rollButton.textContent = "Wurf 2"
-      break;
-    case TurnState.ThirdRoll:
-      dom.rollButton.textContent = "Wurf 3"
-      break;
-    case TurnState.MatchSelect:
-      dom.rollButton.textContent = "Kategorie wählen"
-      break;
+  if (itIsMyTurn()) {
+    pushStateToServer()
   }
-  if (state.gameOver) {
-    dom.rollButton.textContent = "Neues Spiel"
-    dom.rollButton.className = "new-game"
-  }
+  rollButtonComponent.render(dom.rollButton, state)
   let dices = dom.dices;
-  for (var d = 0; d < dices.length; ++d) {
-    // dices[d].textContent = state.dice[d].value
-    dices[d].className = "dice"
-    if (state.turnState == TurnState.FirstRoll) {
-      addClass(dices[d], `blank`)
-    } else {
-      addClass(dices[d], `d${state.dice[d].value}`)
-    }
-    if (state.dice[d].keep) {
-      addClass(dices[d], "keep")
-    } else if (state.rolling) {
-      addClass(dices[d], "animate")
-    }
-  }
+  for (var d = 0; d < dices.length; ++d) diceComponent.render(dices[d], state, state.dice[d])
   for (var pi = 0; pi < state.playerCount; pi++) {
     dom.header[pi].className = (state.currentPlayer == pi) ? "active" : ""
     for (var m = 0; m < dom.matches[pi].length; m++) {
@@ -68,21 +50,25 @@ function render(state) {
       } else {
         addClass(match, "ok")
       }
-      if (dom.matches[pi][m].done) {
+      if (state.score[pi][m] != undefined) {
+        // (dom.matches[pi][m].done) {
         addClass(match, "done")
       }
+      if (isOnline() && pi != online.localPlayer) {
+        addClass(match, "inactive")
+      }
       match.textContent = (score > 0) ? score : "—"
-      if ((state.currentPlayer != pi || state.turnState == TurnState.FirstRoll) && !dom.matches[pi][m].done) {
+      if ((state.currentPlayer != pi || state.turnState == TurnState.FirstRoll) &&
+        //!dom.matches[pi][m].done) {
+        state.score[pi][m] == undefined) {
         match.textContent = ""
         match.className = "match"
       }
     }
     if (state.bonusFlag[pi] > 0) {
       dom.bonus[pi].textContent = state.bonus[pi]
-      // dom.bonus[pi].className = "bonus ok done"
     } else if (state.bonusFlag[pi] < 0) {
       dom.bonus[pi].textContent = "—"
-      // dom.bonus[pi].className = "bonus zero done"
     } else {
       dom.bonus[pi].textContent = ""
     }
@@ -90,6 +76,7 @@ function render(state) {
     dom.sumBottom[pi].textContent = state.score[pi].slice(6).filter(identity).reduce(sum, 0)
     dom.sum[pi].textContent = state.score[pi].filter(identity).reduce(sum, 0) + state.bonus[pi]
   }
+  configComponent.render(dom.config, state)
 }
 
 function makeTable2(parent) {
@@ -114,7 +101,7 @@ function makeTable2(parent) {
     dom.sum[pi] = {}
     dom.matches[pi] = matches.map(_ => {})
     let td = []
-    td.push((tr) => dom.header[pi] = mk.th(tr, `${pi}`))
+    td.push((tr) => dom.header[pi] = mk.th(tr, `~ ${pi + 1} ~`))
     for (var m1 = 0; m1 < 6; m1++) mishMatch(td, m1, pi)
     td.push((tr) => dom.bonus[pi] = addClass(mk.td(tr, 0), "sum"))
     td.push((tr) => dom.sumTop[pi] = addClass(mk.td(tr, 0), "sum"))
@@ -153,4 +140,9 @@ function addClass(dom, className) {
 function removeClass(dom, className) {
   dom.className = stringRemove(dom.className, className)
   return dom
+}
+
+function scrollToTop(){
+  window.scrollTo(0, 0)
+  dom.bottomWrapper.scrollTo(0, 0)
 }

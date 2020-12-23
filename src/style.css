@@ -21,6 +21,7 @@
   --three-unit: calc(var(--unit) * 3);
   --felt-color: #77a07d;
   --interactive-color: #57a9c3;
+  --inactive-color: #999999;
   --negative-color: #ff5757;
   --positive-color: #50c750;
   --clickable-shadow: var(--unit-8th) var(--unit-8th) var(--unit-8th) rgba(0, 0, 0, 0.3),
@@ -34,10 +35,6 @@
   margin: 0;
   padding: 0;
   font-size: calc(var(--unit) * 0.65);
-}
-
-.hidden {
-  display: none;
 }
 
 body {
@@ -66,7 +63,6 @@ body {
   padding-top: var(--half-unit);
   position: relative;
 }
-
 
 @keyframes shakeY2 {
 
@@ -218,11 +214,6 @@ body {
   cursor: pointer;
 }
 
-#reroll.inactive {
-  background-color: #999999;
-  color: rgba(0, 0, 0, .4);
-}
-
 #reroll.new-game {
   background-color: var(--negative-color);
 }
@@ -230,16 +221,38 @@ body {
 .config {
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
+}
+/*
+.config > * {
+  margin-bottom: var(--half-unit);
+} */
+
+.config .row {
+  display: flex;
+  justify-content: space-between;
 }
 
-.config div {
+.config .button {
   border-radius: var(--quarter-unit);
   box-shadow: var(--clickable-shadow);
   background-color: var(--interactive-color);
   color: white;
   text-align: center;
   padding: var(--half-unit);
-  margin: 0 var(--half-unit);
+  margin: 0 var(--half-unit) var(--half-unit);
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+.config input {
+  border-radius: var(--quarter-unit);
+  box-shadow: var(--clickable-shadow);
+  background-color: white;
+  border: none;
+  padding: var(--half-unit);
+  margin: 0 var(--half-unit) var(--half-unit);
+  flex-grow: 1;
   cursor: pointer;
 }
 
@@ -301,6 +314,10 @@ body {
   color: white;
 }
 
+#scoreboard td.inactive {
+  background-color: var(--inactive-color);
+}
+
 #scoreboard td.done {
   box-shadow: none;
   background-color: transparent;
@@ -308,14 +325,22 @@ body {
   cursor: default;
 }
 
-#scoreboard td.ok.done {
-}
+#scoreboard td.ok.done {}
 
-#scoreboard td.zero.done {
-}
+#scoreboard td.zero.done {}
 
 @media only screen and (min-height: 900px) {
   #bottom-wrapper {
     overflow: auto;
   }
+}
+
+.hidden {
+  display: none !important;
+}
+
+
+.button.inactive, #reroll.inactive {
+  background-color: var(--inactive-color);
+  color: rgba(0, 0, 0, .4);
 }

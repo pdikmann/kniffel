@@ -7,6 +7,16 @@
 // on render check matches for current dice and current player
 let animationDuration = 450
 window.onload = () => {
+  runAllTests()
+  setCssVariables()
+  cloneDice()
+  getDOM(dom)
+  makeTable2(dom.scoreboard)
+  render(state)
+  removeClass(document.getElementById('wrapper'), 'hidden')
+}
+
+function setCssVariables() {
   let fullheight = window.innerHeight,
     fullwidth = Math.min(window.innerWidth, 375),
     unit = Math.min(fullheight, fullwidth) / 13,
@@ -19,6 +29,9 @@ window.onload = () => {
     bottomWrapperHeight = Math.min(fullheight - topContentHeight, tableContentHeight)
   document.documentElement.style.setProperty('--bottom-wrapper-height', `${bottomWrapperHeight}px`)
   document.documentElement.style.setProperty('--animation-duration', `${animationDuration}ms`)
+}
+
+function cloneDice() {
   let originalDice = document.getElementsByClassName('dice')[0]
   for (var i = 1; i < 5; i++) {
     let cloneDice = originalDice.cloneNode(true),
@@ -27,12 +40,6 @@ window.onload = () => {
     document.getElementById('dices').appendChild(cloneDice)
   }
   originalDice.addEventListener('click', () => ui.keep(0))
-
-  runAllTests()
-  getDOM(dom)
-  makeTable2(dom.scoreboard)
-  render(state)
-  removeClass(document.getElementById('wrapper'), 'hidden')
 }
 
 //  ███████ ████████  █████  ████████ ███████ 
@@ -52,21 +59,32 @@ let TurnState = {
 let state = freshState(1)
 
 function freshState(playerCount) {
-  let ps = []
-  for (var i = 0; i < playerCount; i++) ps.push(i)
   let s = {
     currentPlayer: 0,
     playerCount: playerCount,
     dice: [],
     rolling: false,
     gameOver: false,
+    turnState: TurnState.FirstRoll,
+    // online features
+    joinable: true,
     // all following per player
     score: [],
-    turnState: TurnState.FirstRoll,
     bonus: [0],
-    bonusFlag: [0] // -1 for fail, 1 for success
+    bonusFlag: [0], // -1 for fail, 1 for success
   }
+  s = freshPlayerVars(s, playerCount)
   rollAll(s)
+  return s
+}
+
+function freshPlayerVars(state, playerCount) {
+  let ps = []
+  for (var i = 0; i < playerCount; i++) ps.push(i)
+  let s = {
+    ...state,
+    playerCount: playerCount
+  }
   s.score = ps.map(_ => [])
   s.bonus = ps.map(_ => 0)
   s.bonusFlag = ps.map(_ => 0)
@@ -114,82 +132,24 @@ function diceValues(state) {
   return values
 }
 
-
-//  ██    ██ ██ 
-//  ██    ██ ██ 
-//  ██    ██ ██ 
-//  ██    ██ ██ 
-//   ██████  ██ 
-
-
-let ui = {}
-
-ui.reroll = () => {
-  if (state.rolling) return
-  if (state.turnState == TurnState.MatchSelect) return
-  if (state.gameOver) {
-    ui.reset()
-    return
+function softReset() {
+  let tempState = {
+    ...state
   }
-  state.rolling = true
-  render(state)
-  setTimeout(() => {
-    rollAll(state)
-    advanceTurn(state)
-    state.rolling = false
-    render(state)
-  }, animationDuration)
-}
-
-ui.keep = (n) => {
-  if (state.rolling) return
-  if (state.turnState == TurnState.FirstRoll) return;
-  state.dice[n].keep = !state.dice[n].keep
-  render(state)
-}
-
-ui.selectMatch = (n, pi) => {
-  if (state.rolling) return
-  if (state.turnState == TurnState.FirstRoll) return
-  if (state.currentPlayer != pi) return
-  let match = dom.matches[pi][n]
-  if (match.done) return
-  match.done = true
-  state.score[pi][n] = matches[n].fn(diceValues(state))
-  if (state.bonusFlag[pi] == 0) {
-    if (state.score[pi].slice(0, 6).filter(x => x == 0).length > 0) {
-      state.bonusFlag[pi] = -1
-    }
-    if (state.score[pi].slice(0, 6).filter(x => x > 0).length == 6) {
-      state.bonusFlag[pi] = 1
-      state.bonus[pi] = 35
-    }
-  }
-  unkeep(state)
-  nextTurn(state)
-  render(state)
-}
-
-ui.reset = () => {
-  if (state.rolling) return
-  dom.scoreboard.removeChild(dom.scoreboard.lastChild)
   state = freshState(state.playerCount)
+  state.joinable = tempState.joinable
+}
+
+function hardReset() {
+  state = freshState(state.playerCount)
+  domReset()
+}
+
+function domReset() {
+  dom.scoreboard.removeChild(dom.scoreboard.lastChild)
   dom = freshDOM()
   getDOM(dom)
   makeTable2(dom.scoreboard)
-  render(state)
-}
-
-ui.morePlayers = () => {
-  if (state.rolling) return
-  state.playerCount += 1
-  ui.reset()
-}
-
-ui.lessPlayers = () => {
-  if (state.rolling) return
-  state.playerCount = Math.max(1, state.playerCount - 1)
-  ui.reset()
 }
 
 //  ███    ███  █████  ██   ██ ███████ 

@@ -242,3 +242,23 @@ function runAllTests() {
   }
   console.log("all tests passed")
 }
+
+function bigState(count) {
+  state.playerCount = count
+  hardReset()
+  for (var pi = 0; pi < count; pi++) {
+    for (var mi = 0; mi < matches.length; mi++) {
+      state.score[pi][mi] = 50
+    }
+    state.bonus[pi] = 35;
+    state.bonusFlag[pi] = 1;
+  }
+  render(state)
+}
+
+function stateSizeTest() {
+  bigState(8)
+  let str = JSON.stringify(state)
+  console.log(`state size (string length) is ${str.length}`)
+  render(state)
+}

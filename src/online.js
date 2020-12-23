@@ -132,12 +132,12 @@ function joinSession() {
   pullRequest(res => {
     if (res.joinable) {
       console.log(`Joining ok`)
+      state = res
       online = {
         ...online,
         connected: true,
         localPlayer: state.playerCount
       }
-      state = res
       state.playerCount += 1
       state = freshPlayerVars(state, state.playerCount)
       pushRequest(state, res => {

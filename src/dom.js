@@ -101,7 +101,7 @@ function makeTable2(parent) {
     dom.sum[pi] = {}
     dom.matches[pi] = matches.map(_ => {})
     let td = []
-    td.push((tr) => dom.header[pi] = mk.th(tr, `${pi}`))
+    td.push((tr) => dom.header[pi] = mk.th(tr, `~ ${pi + 1} ~`))
     for (var m1 = 0; m1 < 6; m1++) mishMatch(td, m1, pi)
     td.push((tr) => dom.bonus[pi] = addClass(mk.td(tr, 0), "sum"))
     td.push((tr) => dom.sumTop[pi] = addClass(mk.td(tr, 0), "sum"))

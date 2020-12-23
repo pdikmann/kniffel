@@ -2,18 +2,19 @@ rollButtonComponent = {}
 
 rollButtonComponent.render = (element, state) => {
   element.className = (state.turnState == TurnState.MatchSelect) ? "inactive" : ""
+  let activePlayer = state.currentPlayer + 1
   switch (state.turnState) {
     case TurnState.FirstRoll:
-      element.textContent = `Spieler ${state.currentPlayer} - Wurf 1` //"Wurf 1"
+      element.textContent = `Spieler ${activePlayer} - Wurf 1` //"Wurf 1"
       break;
     case TurnState.SecondRoll:
-      element.textContent = `Spieler ${state.currentPlayer} - Wurf 2`
+      element.textContent = `Spieler ${activePlayer} - Wurf 2`
       break;
     case TurnState.ThirdRoll:
-      element.textContent = `Spieler ${state.currentPlayer} - Wurf 3`
+      element.textContent = `Spieler ${activePlayer} - Wurf 3`
       break;
     case TurnState.MatchSelect:
-      element.textContent = `Spieler ${state.currentPlayer} - Auswahl` //"Kategorie wählen"
+      element.textContent = `Spieler ${activePlayer} - Auswahl` //"Kategorie wählen"
       break;
   }
   if (state.gameOver) {

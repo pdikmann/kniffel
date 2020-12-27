@@ -1,10 +1,3 @@
-// scoreboard
-// dice {value, wasRolled}
-// add classes on dom elements when rendering?
-// or create new elements?
-// turn state machine: roll0, [roll1, roll2], selectSlot
-// create table, store score td for each match
-// on render check matches for current dice and current player
 let animationDuration = 450
 window.onload = () => {
   runAllTests()

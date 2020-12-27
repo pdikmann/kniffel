@@ -1,45 +1,37 @@
-// scoreboard
-// dice {value, wasRolled}
-// add classes on dom elements when rendering?
-// or create new elements?
-// turn state machine: roll0, [roll1, roll2], selectSlot
-// create table, store score td for each match
-// on render check matches for current dice and current player
 let animationDuration = 450
 window.onload = () => {
   runAllTests()
   setCssVariables()
   cloneDice()
   getDOM(dom)
-  makeTable2(dom.scoreboard)
-  render(state)
-  removeClass(document.getElementById('wrapper'), 'hidden')
+  checkLocalStorageAndContinue(() => {
+    makeTable2(dom.scoreboard)
+    render(state)
+    removeClass(document.getElementById('wrapper'), 'hidden')
+  })
 }
 
-function setCssVariables() {
-  let fullheight = window.innerHeight,
-    fullwidth = Math.min(window.innerWidth, 375),
-    unit = Math.min(fullheight, fullwidth) / 13,
-    tableMargin = 2 * (unit / 2),
-    trMargin = unit / 8,
-    rowHead = unit,
-    rowHeight = unit * 1.5,
-    tableContentHeight = tableMargin + rowHead + 17 * (rowHeight + trMargin), //unit * 29.625,
-    topContentHeight = unit * 4.5,
-    bottomWrapperHeight = Math.min(fullheight - topContentHeight, tableContentHeight)
-  document.documentElement.style.setProperty('--bottom-wrapper-height', `${bottomWrapperHeight}px`)
-  document.documentElement.style.setProperty('--animation-duration', `${animationDuration}ms`)
-}
-
-function cloneDice() {
-  let originalDice = document.getElementsByClassName('dice')[0]
-  for (var i = 1; i < 5; i++) {
-    let cloneDice = originalDice.cloneNode(true),
-      n = i
-    cloneDice.addEventListener('click', () => ui.keep(n))
-    document.getElementById('dices').appendChild(cloneDice)
+function checkLocalStorageAndContinue(cont) {
+  let ls_online = JSON.parse(window.localStorage.getItem('online')),
+    ls_state = JSON.parse(window.localStorage.getItem('state'))
+  if (notUndefinedOrNull(ls_online) && notUndefinedOrNull(ls_state)) {
+    if (ls_online.connected === false) {
+      online = ls_online
+      state = ls_state
+      cont()
+    } else {
+      online = ls_online
+      pullRequest(res => {
+        state = res
+        if (itsNotMyTurn()) {
+          waitForMyTurn()
+        }
+        cont()
+      })
+    }
+  } else {
+    cont()
   }
-  originalDice.addEventListener('click', () => ui.keep(0))
 }
 
 //  ███████ ████████  █████  ████████ ███████ 
@@ -48,13 +40,6 @@ function cloneDice() {
 //       ██    ██    ██   ██    ██    ██    
 //  ███████    ██    ██   ██    ██    ███████ 
 
-let TurnState = {
-  FirstRoll: 0,
-  SecondRoll: 1,
-  ThirdRoll: 2,
-  MatchSelect: 3,
-  MAX: 3
-}
 
 let state = freshState(1)
 
@@ -99,7 +84,7 @@ function advanceTurn(state) {
 function nextTurn(state) {
   state.turnState = TurnState.FirstRoll
   state.currentPlayer = (state.currentPlayer + 1) % state.playerCount
-  if (state.currentPlayer == 0 && state.score[0].filter(notUndefined).length == 13) {
+  if (state.currentPlayer == 0 && state.score[0].filter(notUndefinedOrNull).length == 13) {
     state.gameOver = true
   }
 }
@@ -197,8 +182,8 @@ function identity(x) {
   return x
 }
 
-function notUndefined(x) {
-  return typeof(x) != "undefined"
+function notUndefinedOrNull(x) {
+  return typeof (x) != "undefined" && x != null
 }
 
 //  ████████ ███████ ███████ ████████ 

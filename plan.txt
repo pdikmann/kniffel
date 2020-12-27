@@ -32,3 +32,9 @@ start requesting state under supplied session name
 
 leave game:
 stop being online, new game
+
+============================================================================================
+
+- use redux model for state for better visibility
+- unify state into single variable for easier handling
+

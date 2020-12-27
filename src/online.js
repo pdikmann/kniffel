@@ -1,18 +1,10 @@
-let onlineState = {
-  WaitingForPlayers: 0,
-  Playing: 1,
-  MAX: 1,
-}
-
 let online = {
   sessionName: "",
   connected: false,
   isHost: false,
   localPlayer: 0,
   requestInterval: {},
-  onlineState: onlineState.WaitingForPlayers
-  // playerRoster: [],
-  // canJoin: true,
+  onlineState: OnlineState.WaitingForPlayers
 }
 
 function isOnline() {
@@ -30,26 +22,26 @@ function hostOrSinglePlayer() {
 
 function itsNotMyTurn() {
   return online.connected &&
-    online.onlineState == onlineState.Playing &&
+    online.onlineState == OnlineState.Playing &&
     state.currentPlayer != online.localPlayer
 }
 
-function itIsMyTurn() {
+function itsMyTurn() {
   return online.connected &&
-    online.onlineState == onlineState.Playing &&
+    online.onlineState == OnlineState.Playing &&
     state.currentPlayer == online.localPlayer
 }
 
 function hostIsWaitingForPlayersToJoin() {
   return online.connected &&
     online.isHost &&
-    online.onlineState == onlineState.WaitingForPlayers
+    online.onlineState == OnlineState.WaitingForPlayers
 }
 
 function guestIsWaitingForHostToStart() {
   return online.connected &&
     !online.isHost &&
-    online.onlineState == onlineState.WaitingForPlayers
+    online.onlineState == OnlineState.WaitingForPlayers
 }
 
 function isGuest() {
@@ -70,7 +62,7 @@ function pushStateToServer() {
 
 function startOnlineGame() {
   stopInterval()
-  online.onlineState = onlineState.Playing
+  online.onlineState = OnlineState.Playing
   state.joinable = false
   render(state)
 }
@@ -97,7 +89,7 @@ function waitForMyTurn() {
   online.requestInterval = setInterval(() => {
     pullRequest(res => {
       state = res
-      if (itIsMyTurn()) {
+      if (itsMyTurn()) {
         console.log("It is My Turn")
         stopInterval()
       }
@@ -116,7 +108,7 @@ function waitForHostToStart() {
       }
       if (!res.joinable) {
         state = res
-        online.onlineState = onlineState.Playing
+        online.onlineState = OnlineState.Playing
         stopInterval()
         waitForMyTurn()
         render(state)
@@ -144,7 +136,7 @@ function joinSession() {
         connected: true,
         isHost: false,
         localPlayer: state.playerCount,
-        onlineState: onlineState.WaitingForPlayers
+        onlineState: OnlineState.WaitingForPlayers
       }
       state.playerCount += 1
       state = freshPlayerVars(state, state.playerCount)
@@ -170,7 +162,7 @@ function hostSession() {
         connected: true,
         isHost: true,
         localPlayer: 0,
-        onlineState: onlineState.WaitingForPlayers
+        onlineState: OnlineState.WaitingForPlayers
       }
       scrollToTop()
       render(state)

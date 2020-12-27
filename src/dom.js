@@ -32,9 +32,12 @@ function getDOM(dom) {
 }
 
 function render(state) {
-  if (itIsMyTurn()) {
+  if (itsMyTurn()) {
     pushStateToServer()
   }
+  window.localStorage.setItem('online', JSON.stringify(online))
+  window.localStorage.setItem('state', JSON.stringify(state))
+  //
   rollButtonComponent.render(dom.rollButton, state)
   let dices = dom.dices;
   for (var d = 0; d < dices.length; ++d) diceComponent.render(dices[d], state, state.dice[d])
@@ -142,7 +145,33 @@ function removeClass(dom, className) {
   return dom
 }
 
-function scrollToTop(){
+function scrollToTop() {
   window.scrollTo(0, 0)
   dom.bottomWrapper.scrollTo(0, 0)
+}
+
+function setCssVariables() {
+  let fullheight = window.innerHeight,
+    fullwidth = Math.min(window.innerWidth, 375),
+    unit = Math.min(fullheight, fullwidth) / 13,
+    tableMargin = 2 * (unit / 2),
+    trMargin = unit / 8,
+    rowHead = unit,
+    rowHeight = unit * 1.5,
+    tableContentHeight = tableMargin + rowHead + 17 * (rowHeight + trMargin), //unit * 29.625,
+    topContentHeight = unit * 4.5,
+    bottomWrapperHeight = Math.min(fullheight - topContentHeight, tableContentHeight)
+  document.documentElement.style.setProperty('--bottom-wrapper-height', `${bottomWrapperHeight}px`)
+  document.documentElement.style.setProperty('--animation-duration', `${animationDuration}ms`)
+}
+
+function cloneDice() {
+  let originalDice = document.getElementsByClassName('dice')[0]
+  for (var i = 1; i < 5; i++) {
+    let cloneDice = originalDice.cloneNode(true),
+      n = i
+    cloneDice.addEventListener('click', () => ui.keep(n))
+    document.getElementById('dices').appendChild(cloneDice)
+  }
+  originalDice.addEventListener('click', () => ui.keep(0))
 }

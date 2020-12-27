@@ -48,13 +48,7 @@ function cloneDice() {
 //       ██    ██    ██   ██    ██    ██    
 //  ███████    ██    ██   ██    ██    ███████ 
 
-let TurnState = {
-  FirstRoll: 0,
-  SecondRoll: 1,
-  ThirdRoll: 2,
-  MatchSelect: 3,
-  MAX: 3
-}
+
 
 let state = freshState(1)
 

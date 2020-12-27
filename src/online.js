@@ -26,7 +26,7 @@ function itsNotMyTurn() {
     state.currentPlayer != online.localPlayer
 }
 
-function itIsMyTurn() {
+function itsMyTurn() {
   return online.connected &&
     online.onlineState == OnlineState.Playing &&
     state.currentPlayer == online.localPlayer
@@ -89,7 +89,7 @@ function waitForMyTurn() {
   online.requestInterval = setInterval(() => {
     pullRequest(res => {
       state = res
-      if (itIsMyTurn()) {
+      if (itsMyTurn()) {
         console.log("It is My Turn")
         stopInterval()
       }

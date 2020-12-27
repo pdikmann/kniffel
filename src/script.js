@@ -60,7 +60,7 @@ function advanceTurn(state) {
 function nextTurn(state) {
   state.turnState = TurnState.FirstRoll
   state.currentPlayer = (state.currentPlayer + 1) % state.playerCount
-  if (state.currentPlayer == 0 && state.score[0].filter(notUndefined).length == 13) {
+  if (state.currentPlayer == 0 && state.score[0].filter(notUndefinedOrNull).length == 13) {
     state.gameOver = true
   }
 }
@@ -158,8 +158,8 @@ function identity(x) {
   return x
 }
 
-function notUndefined(x) {
-  return typeof(x) != "undefined" && x != null
+function notUndefinedOrNull(x) {
+  return typeof (x) != "undefined" && x != null
 }
 
 //  ████████ ███████ ███████ ████████ 

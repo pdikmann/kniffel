@@ -1,7 +1,7 @@
 configComponent = {}
 
 configComponent.render = (element, state) => {
-  element.reset.className = isOffline() ? "button" : isGuest() ? "button hidden" : itIsMyTurn() ? "button" : "button inactive"
+  element.reset.className = isOffline() ? "button" : isGuest() ? "button hidden" : itsMyTurn() ? "button" : "button inactive"
   let onlyOffline = isOffline() ? "button" : "button hidden"
   element.morePlayers.className = onlyOffline
   element.lessPlayers.className = onlyOffline

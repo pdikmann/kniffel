@@ -32,7 +32,7 @@ function getDOM(dom) {
 }
 
 function render(state) {
-  if (itIsMyTurn()) {
+  if (itsMyTurn()) {
     pushStateToServer()
   }
   rollButtonComponent.render(dom.rollButton, state)

@@ -198,7 +198,7 @@ function identity(x) {
 }
 
 function notUndefined(x) {
-  return typeof(x) != "undefined"
+  return typeof(x) != "undefined" && x != null
 }
 
 //  ████████ ███████ ███████ ████████ 

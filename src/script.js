@@ -4,9 +4,34 @@ window.onload = () => {
   setCssVariables()
   cloneDice()
   getDOM(dom)
-  makeTable2(dom.scoreboard)
-  render(state)
-  removeClass(document.getElementById('wrapper'), 'hidden')
+  checkLocalStorageAndContinue(() => {
+    makeTable2(dom.scoreboard)
+    render(state)
+    removeClass(document.getElementById('wrapper'), 'hidden')
+  })
+}
+
+function checkLocalStorageAndContinue(cont) {
+  let ls_online = JSON.parse(window.localStorage.getItem('online')),
+    ls_state = JSON.parse(window.localStorage.getItem('state'))
+  if (notUndefinedOrNull(ls_online) && notUndefinedOrNull(ls_state)) {
+    if (ls_online.connected === false) {
+      online = ls_online
+      state = ls_state
+      cont()
+    } else {
+      online = ls_online
+      pullRequest(res => {
+        state = res
+        if (itsNotMyTurn()) {
+          waitForMyTurn()
+        }
+        cont()
+      })
+    }
+  } else {
+    cont()
+  }
 }
 
 //  ███████ ████████  █████  ████████ ███████ 
@@ -14,7 +39,6 @@ window.onload = () => {
 //  ███████    ██    ███████    ██    █████ 
 //       ██    ██    ██   ██    ██    ██    
 //  ███████    ██    ██   ██    ██    ███████ 
-
 
 
 let state = freshState(1)

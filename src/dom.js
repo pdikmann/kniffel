@@ -35,6 +35,9 @@ function render(state) {
   if (itsMyTurn()) {
     pushStateToServer()
   }
+  window.localStorage.setItem('online', JSON.stringify(online))
+  window.localStorage.setItem('state', JSON.stringify(state))
+  //
   rollButtonComponent.render(dom.rollButton, state)
   let dices = dom.dices;
   for (var d = 0; d < dices.length; ++d) diceComponent.render(dices[d], state, state.dice[d])
@@ -142,7 +145,7 @@ function removeClass(dom, className) {
   return dom
 }
 
-function scrollToTop(){
+function scrollToTop() {
   window.scrollTo(0, 0)
   dom.bottomWrapper.scrollTo(0, 0)
 }

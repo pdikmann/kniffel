@@ -339,8 +339,12 @@ body {
   display: none !important;
 }
 
-
 .button.inactive, #reroll.inactive {
   background-color: var(--inactive-color);
   color: rgba(0, 0, 0, .4);
+}
+
+.version {
+    color: rgba(0,0,0,.4);
+    margin-left: var(--half-unit);
 }

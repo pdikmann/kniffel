@@ -1,9 +1,12 @@
-let animationDuration = 450
+let animationDuration = 450,
+  scriptVersion = "1.1.1"
+
 window.onload = () => {
   runAllTests()
   setCssVariables()
   cloneDice()
   getDOM(dom)
+  dom.version.textContent = `${dom.version.textContent} / script ${scriptVersion}` 
   checkLocalStorageAndContinue(() => {
     makeTable2(dom.scoreboard)
     render(state)

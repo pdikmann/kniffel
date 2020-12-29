@@ -29,6 +29,7 @@ function getDOM(dom) {
     leave: document.getElementById('leave'),
     session: document.getElementById('session'),
   }
+  dom.version = document.getElementById('version')
 }
 
 function render(state) {

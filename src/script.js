@@ -17,7 +17,7 @@ window.onload = () => {
 function checkLocalStorageAndContinue(cont) {
   let ls_online = JSON.parse(window.localStorage.getItem('online')),
     ls_state = JSON.parse(window.localStorage.getItem('state'))
-  if (notUndefinedOrNull(ls_online) && notUndefinedOrNull(ls_state)) {
+  if (notUndefinedOrNull(ls_online) && notUndefinedOrNull(ls_state) && ls_state.version === scriptVersion) {
     if (ls_online.connected === false) {
       online = ls_online
       state = ls_state
@@ -48,6 +48,7 @@ let state = freshState(1)
 
 function freshState(playerCount) {
   let s = {
+    version: scriptVersion,
     currentPlayer: 0,
     playerCount: playerCount,
     dice: [],
@@ -188,7 +189,7 @@ function identity(x) {
 }
 
 function notUndefinedOrNull(x) {
-  return typeof (x) != "undefined" && x != null
+  return typeof x != "undefined" && x != null
 }
 
 //  ████████ ███████ ███████ ████████ 

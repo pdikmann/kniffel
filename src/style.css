@@ -28,6 +28,7 @@
   --clickable-shadow: var(--unit-8th) var(--unit-8th) var(--unit-8th) rgba(0, 0, 0, 0.3),
     0 0 var(--unit-8th) rgba(0, 0, 0, 0.3);
   --inset-shadow: inset var(--unit-8th) var(--quarter-unit) var(--unit-8th) rgba(0, 0, 0, 0.2);
+  --halo-shadow: inset 0 0 var(--quarter-unit) #00000066;
   --inside-border-shadow: inset 0 0 0 var(--unit-8th) white;
   --lock-image: url(../gfx/lock2.png);
 }
@@ -321,9 +322,14 @@ body {
 
 #scoreboard td.done {
   box-shadow: none;
+  text-shadow: none;
   background-color: transparent;
   color: rgba(0, 0, 0, .4);
   cursor: default;
+}
+
+#scoreboard td.last-selected {
+  box-shadow: var(--halo-shadow);
 }
 
 #scoreboard td.ok.done {}

@@ -39,7 +39,7 @@ ui.selectMatch = (n, pi) => {
   if (state.currentPlayer != pi) return
   let match = dom.matches[pi][n]
   if (state.score[pi][n] != undefined) return
-  // match.done = true
+  state.lastSelectedMatch[pi] = n
   state.score[pi][n] = matches[n].fn(diceValues(state))
   if (state.bonusFlag[pi] == 0) {
     if (state.score[pi].slice(0, 6).filter(x => x == 0).length > 0) {

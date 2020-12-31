@@ -61,6 +61,9 @@ function render(state) {
       if (isOnline() && pi != online.localPlayer) {
         addClass(match, "inactive")
       }
+      if (state.lastSelectedMatch[pi] === m) {
+        addClass(match, "last-selected")
+      }
       match.textContent = (score > 0) ? score : "—"
       if ((state.currentPlayer != pi || state.turnState == TurnState.FirstRoll) &&
         //!dom.matches[pi][m].done) {

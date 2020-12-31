@@ -6,7 +6,7 @@ window.onload = () => {
   setCssVariables()
   cloneDice()
   getDOM(dom)
-  dom.version.textContent = `${dom.version.textContent} / script ${scriptVersion}` 
+  dom.version.textContent = `${dom.version.textContent} / script ${scriptVersion}`
   checkLocalStorageAndContinue(() => {
     makeTable2(dom.scoreboard)
     render(state)
@@ -60,6 +60,7 @@ function freshState(playerCount) {
     score: [],
     bonus: [0],
     bonusFlag: [0], // -1 for fail, 1 for success
+    lastSelectedMatch: [-1], // -1 for none, >=0 otherwise
   }
   s = freshPlayerVars(s, playerCount)
   rollAll(s)
@@ -76,6 +77,7 @@ function freshPlayerVars(state, playerCount) {
   s.score = ps.map(_ => [])
   s.bonus = ps.map(_ => 0)
   s.bonusFlag = ps.map(_ => 0)
+  s.lastSelectedMatch = ps.map(_ => -1)
   return s
 }
 

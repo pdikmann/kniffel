@@ -1,5 +1,5 @@
 let animationDuration = 450,
-  scriptVersion = "1.1.1"
+  scriptVersion = "1.1.2"
 
 window.onload = () => {
   runAllTests()

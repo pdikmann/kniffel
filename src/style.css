@@ -24,6 +24,7 @@
   --inactive-color: #999999;
   --negative-color: #ff5757;
   --positive-color: #50c750;
+  --text-shadow: rgba(0, 0, 0, .4);
   --clickable-shadow: var(--unit-8th) var(--unit-8th) var(--unit-8th) rgba(0, 0, 0, 0.3),
     0 0 var(--unit-8th) rgba(0, 0, 0, 0.3);
   --inset-shadow: inset var(--unit-8th) var(--quarter-unit) var(--unit-8th) rgba(0, 0, 0, 0.2);
@@ -223,10 +224,6 @@ body {
   justify-content: space-between;
   flex-direction: column;
 }
-/*
-.config > * {
-  margin-bottom: var(--half-unit);
-} */
 
 .config .row {
   display: flex;
@@ -300,6 +297,10 @@ body {
   cursor: pointer;
 }
 
+#scoreboard td.zero, #scoreboard td.ok {
+  text-shadow: 0 0 4px var(--text-shadow), 0 0 10px var(--text-shadow), 0 0 16px var(--text-shadow);
+}
+
 #scoreboard td.zero {
   background-color: var(--negative-color);
   box-shadow: var(--inset-shadow),
@@ -345,6 +346,6 @@ body {
 }
 
 #version {
-    color: rgba(0,0,0,.4);
-    margin-left: var(--half-unit);
+  color: rgba(0, 0, 0, .4);
+  margin-left: var(--half-unit);
 }

@@ -15,19 +15,20 @@
 :root {
   --full-width: calc(var(--unit) * 13);
   --unit-8th: calc(var(--unit) / 8);
+  --unit-16th: calc(var(--unit) / 16);
   --quarter-unit: calc(var(--unit) / 4);
   --half-unit: calc(var(--unit) / 2);
   --two-unit: calc(var(--unit) * 2);
   --three-unit: calc(var(--unit) * 3);
-  --felt-color: #77a07d;
+  --felt-color: #D7D2CC;
   --interactive-color: #57a9c3;
   --inactive-color: #999999;
-  --negative-color: #ff5757;
-  --positive-color: #50c750;
+  --negative-color: #DF362D;
+  --positive-color: #7CAC59;
   --text-shadow: rgba(0, 0, 0, .4);
   --clickable-shadow: var(--unit-8th) var(--unit-8th) var(--unit-8th) rgba(0, 0, 0, 0.3),
     0 0 var(--unit-8th) rgba(0, 0, 0, 0.3);
-  --inset-shadow: inset var(--unit-8th) var(--quarter-unit) var(--unit-8th) rgba(0, 0, 0, 0.2);
+  --inset-shadow: inset var(--unit-16th) var(--unit-16th) var(--unit-16th) #2e333869;
   --halo-shadow: inset 0 0 var(--quarter-unit) #00000066;
   --inside-border-shadow: inset 0 0 0 var(--unit-8th) white;
   --lock-image: url(../gfx/lock2.png);
@@ -37,6 +38,7 @@
   margin: 0;
   padding: 0;
   font-size: calc(var(--unit) * 0.65);
+  font-family: Raleway, sans-serif;
 }
 
 body {
@@ -304,15 +306,15 @@ body {
 
 #scoreboard td.zero {
   background-color: var(--negative-color);
-  box-shadow: var(--inset-shadow),
-    var(--inside-border-shadow);
+  box-shadow: var(--inset-shadow);
+    /*var(--inside-border-shadow);*/
   color: white;
 }
 
 #scoreboard td.ok {
   background-color: var(--positive-color);
-  box-shadow: var(--inset-shadow),
-    var(--inside-border-shadow);
+  box-shadow: var(--inset-shadow); 
+    /*var(--inside-border-shadow);*/
   color: white;
 }
 

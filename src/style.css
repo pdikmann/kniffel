@@ -242,7 +242,7 @@ body {
 }
 
 #reroll.new-game {
-  background-color: var(--negative-color);
+  background-color: var(--positive-color);
 }
 
 .config {
@@ -337,9 +337,9 @@ body {
 }
 
 #scoreboard td.zero {
-  background-color: var(--negative-color);
-  text-shadow: 0 0 4px var(--text-shadow-zero), 0 0 10px var(--text-shadow-zero), 0 0 16px var(--text-shadow-zero);
-  box-shadow: var(--inset-shadow-zero);
+  /*background-color: var(--negative-color);*/
+  /*text-shadow: 0 0 4px var(--text-shadow-zero), 0 0 10px var(--text-shadow-zero), 0 0 16px var(--text-shadow-zero);*/
+  /*box-shadow: var(--inset-shadow-zero);*/
   /*box-shadow: var(--inside-border-shadow);*/
   /*color: white;*/
 }
@@ -352,23 +352,27 @@ body {
   /*color: white;*/
 }
 
-#scoreboard td.inactive {
+#scoreboard td.ok.inactive {
   background-color: var(--inactive-color);
   color: var(--font-dim-color-solid);
   text-shadow: 0 0 4px var(--text-shadow-inactive), 0 0 10px var(--text-shadow-inactive), 0 0 16px var(--text-shadow-inactive);
   box-shadow: var(--inset-shadow-inactive);
 }
 
-#scoreboard td.done {
-  box-shadow: none;
-  text-shadow: none;
-  background-color: transparent;
+#scoreboard td.zero.inactive {
   color: var(--font-dim-color);
+}
+
+#scoreboard td.done {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  background-color: transparent !important;
+  color: var(--font-dim-color) !important;
   cursor: default;
 }
 
 #scoreboard td.last-selected {
-  box-shadow: var(--halo-shadow);
+  box-shadow: var(--halo-shadow) !important;
 }
 
 #scoreboard td.ok.done {
